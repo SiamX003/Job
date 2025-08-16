@@ -83,4 +83,104 @@ header {
   font-weight: 500;
 }
 
+#bar{
+  display: none;
+  color: #fff;
+}
 
+.hero {
+  background-image: url("./images/hero1.PNG");
+  background-color: #1f4a40;
+}
+
+.hero-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+}
+.search{
+    position: relative;
+}
+.search input {
+  width: 100%;
+  padding: 0px 20px;
+  border-radius: 35px;
+  height: 4rem;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+}
+.search a {
+  position: absolute;
+  right: 20px;
+  top: 12px;
+
+}
+
+.h.right {
+  width: 50%;
+}
+
+.h.right img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.h.left {
+  width: 45%;
+  color: #fff;
+}
+
+.h.left p {
+  padding: 1.5rem 0;
+}
+
+@media (max-width: 699px) {
+  #menu {
+    display: block;
+    background-color: #fff;
+    width: 280px;
+    height: auto;
+    position: absolute;
+    top: 80px;
+    right: -100%;
+    padding: 30px 0px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 13px;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+ #menu.active {
+    right: 10px;
+    opacity: 1;
+ }
+
+#menu li {
+    padding: 1rem 0;
+  }
+
+  #menu li a {
+    color: #1f4a40;
+  }
+
+  #bar {
+    display: block;
+    font-size: 2rem;
+    margin-right: 20px;
+    cursor: pointer;
+  }
+
+#bar {
+    display: block;
+    font-size: 1.7rem;
+    cursor: pointer;
+  }
+
+#w-btn {
+  background-color: #1f4a40;
+  color: #fff;
+  margin: 20px 0 0 50px;
+}
+}
