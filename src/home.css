@@ -88,52 +88,74 @@ header {
   color: #fff;
 }
 
+/* Keep your existing hero styles, just add these adjustments */
 .hero {
-  background-image: url("./images/hero1.PNG");
   background-color: #1f4a40;
+  padding: 4rem 0;
 }
 
 .hero-box {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  height: 100vh;
+  min-height: 80vh; /* Adjust this value to control hero height */
 }
-.search{
-    position: relative;
+
+.h-left {
+  width: 50%;
+  color: white;
 }
+
+.h-left h1 {
+  font-size: 3.5rem;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.h-left p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+  max-width: 90%;
+}
+
+.h-right {
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.h-right img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.search {
+  position: relative;
+  max-width: 500px;
+}
+
 .search input {
   width: 100%;
-  padding: 0px 20px;
-  border-radius: 35px;
-  height: 4rem;
-  font-size: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 50px;
   border: none;
-  outline: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-size: 1rem;
 }
+
 .search a {
   position: absolute;
-  right: 20px;
-  top: 12px;
-
-}
-
-.h.right {
-  width: 50%;
-}
-
-.h.right img {
-  width: 100%;
-  object-fit: cover;
-}
-
-.h.left {
-  width: 45%;
-  color: #fff;
-}
-
-.h.left p {
-  padding: 1.5rem 0;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1f4a40;
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 500;
 }
 
 @media (max-width: 699px) {

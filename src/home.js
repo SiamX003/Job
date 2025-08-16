@@ -1,10 +1,9 @@
 import React from "react";
-import "./home.css"; // make sure style.css is in src/
-
-// Import images (place them inside src/images/)
+import "./home.css"; 
 import logo from "./images/logo.png";
 import heroImg from "./images/hero1.PNG";
-import "./toggle"; // Import the toggle functionality
+import "./toggle"; 
+
 const Home = () => {
   return (
     <div>
