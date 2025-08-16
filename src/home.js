@@ -1,5 +1,5 @@
 import React from "react";
-import "./home.css"; // keep your styles in the same CSS file
+import "./style.css"; // keep your styles in the same CSS file
 
 const Navbar = () => {
   return (
