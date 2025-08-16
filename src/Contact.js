@@ -28,9 +28,9 @@ function Contact() {
       
       <div className="contact-info">
         <h2>Our Contact Information</h2>
-        <p>Email: support@jstack.com</p>
-        <p>Phone: +1 (555) 123-4567</p>
-        <p>Address: 123 Business Street, City, State 12345</p>
+        <p>Email: support@jobSolutions.com</p>
+        <p>Phone: 01717278827</p>
+        <p>AUST campus, Love Road, Tejgaon, Dhaka, Bangladesh</p>
       </div>
 
       <div className="contact-form">
