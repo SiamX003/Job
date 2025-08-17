@@ -90,7 +90,7 @@ header {
   color: #fff;
 }
 
-/* Keep your existing hero styles, just add these adjustments */
+
 .hero {
   background-color: #1f4a40;
   padding: 4rem 0;
@@ -99,7 +99,7 @@ header {
 .hero-box {
   display: flex;
   align-items: center;
-  min-height: 80vh; /* Adjust this value to control hero height */
+  min-height: 80vh; 
 }
 
 .h-left {
