@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import "./home.css"; 
 import logo from "./images/logo.png";
 import heroImg from "./images/hero1.PNG";
-import "./toggle"; 
-import { Link } from 'react-router-dom';
+import fe1 from "./images/fe 1.png";
+import fe2 from "./images/fe 2.png";
+import fe3 from "./images/fe 3.png";
+import fe4 from "./images/fe 4.png";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,10 +18,10 @@ const Home = () => {
         <div id="navbar" className="obj-width">
           <Link to="/">
             <img className="logo" src={logo} alt="logo" />
-          </a>
-          <ul id="menu">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Browse</a></li>
+          </Link>
+          <ul id="menu" className={menuOpen ? "active" : ""}>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/browse">Browse</Link></li>
             <li><Link to="/contact">Contact</Link></li>
             <button id="w-btn">Join</button>
           </ul>
