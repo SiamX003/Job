@@ -40,6 +40,8 @@ h3 {
   border: none;
 }
 
+
+
 .sec-space{
   padding: 4rem 0;
 }
@@ -115,7 +117,7 @@ header {
   font-size: 1.1rem;
   line-height: 1.8;
   margin-bottom: 2.5rem;
-  max-width: 80%;
+  max-width: 90%;
 }
 
 .h-right {
@@ -206,3 +208,4 @@ header {
   margin: 20px 0 0 50px;
 }
 }
+
