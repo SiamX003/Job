@@ -3,6 +3,7 @@ import "./home.css";
 import logo from "./images/logo.png";
 import heroImg from "./images/hero1.PNG";
 import "./toggle"; 
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
@@ -15,7 +16,7 @@ const Home = () => {
           <ul id="menu">
             <li><a href="#">Home</a></li>
             <li><a href="#">Browse</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><Link to="/contact">Contact</Link></li>
             <button id="w-btn">Join</button>
           </ul>
           <i id="bar" className="bx bx-menu"></i>
