@@ -88,7 +88,8 @@ const Home = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="hero">
+
+<section className="hero">
         <div className="hero-box">
           <div className="h-left">
             <h2>Find the perfect freelance services for your business</h2>
