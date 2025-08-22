@@ -126,6 +126,107 @@ header {
   justify-content: flex-end;
 }
 
+.features {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.features h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  background: #2563eb; /* Blue bar */
+  color: white;
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+}
+
+.features p.sub-text {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.features .fe-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.features .fe-box div {
+  flex: 1 1 220px; /* flexible columns */
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: #fff;
+}
+
+.features .fe-box div:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.features .fe-box img {
+  width: 50px;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.features .fe-box div:hover img {
+  transform: scale(1.1);
+}
+
+.jobs .job-id{
+  margin-top: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+}
+
+.jobs .job-id li{
+  padding: 20px 40px;
+  cursor: pointer;
+  color: black;
+}
+
+.jobs .job-id li.active{
+  background: #51a995;
+  color: white;
+}
+
+.jobs .jList{
+  margin-top: 3rem;
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  border: 1px solid #ccc;
+  align-items: center;
+  justify-items: start;
+  cursor: pointer;
+  color: black;
+  padding: 2rem 2rem;
+}
+
+.jobs .jList:hover{
+  background: #e6fffb;
+}
+
+
+.jobs .jList img{
+  width: 40px;
+}
+
+.jobs .jList h3{
+  padding-bottom: 0;
+}
+
 .h-right img {
   max-width: 100%;
   height: auto;
@@ -160,7 +261,7 @@ header {
   font-weight: 500;
 }
 
-@media (max-width: 699px) {
+@media (max-width: 480px) {
   #menu {
     display: block;
     background-color: #fff;
@@ -207,5 +308,59 @@ header {
   color: #fff;
   margin: 20px 0 0 50px;
 }
+
+.hero-box{
+  flex-direction: column-reverse;
+  justify-content: center;
+  height: auto;
+  align-items: start;
+  padding: 8rem 0;
 }
 
+.h-left{
+  width: 100%;
+}
+
+.h-right{
+  display: none;
+}
+
+ .features .fe-box {
+    justify-content: center;
+  }
+
+  .features .fe-box div {
+    flex: 1 1 45%;
+  }
+
+  .jobs .job-id{
+  position: relative;
+  width: 100%;
+  overflow-x: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  }
+
+  .jobs .job-id li{
+  padding: 20px 30px;
+  text-wrap: nowrap;
+}
+
+.jobs container{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.jobs .jList{
+  margin-top: 3rem;
+  width: 50%;
+  grid-template-columns: repeat(1,1fr);
+  grid-gap: 15px;
+  padding: 2rem 1rem;
+  text-align: center;
+  justify-items: center;
+}
+
+}
