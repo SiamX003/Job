@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useState } from "react";
+//import React from 'react';
 import './home.css'; // Assuming the styles are in style.css
+import './script.js';
+import './Contact.css';
+import './Contact.js';
 import logo from './images/logo.png';
 import heroImg from './images/hero1.PNG';
 import fe1 from './images/fe 1.png';
@@ -20,6 +24,7 @@ import google from './images/google.png';
 import uber from './images/uber.png';
 import yahoo from './images/yahoo.png';
 import linkedin from './images/linkedin.png';
+import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
