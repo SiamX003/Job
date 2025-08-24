@@ -1,21 +1,28 @@
 import React, { useMemo, useState } from "react";
 import "./home.css";
+
 import logo from "./images/logo.png";
-import heroImg from './images/hero1.PNG';
-import fe1 from './images/fe 1.png';
-import fe2 from './images/fe 2.png';
-import fe3 from './images/fe 3.png';
-import fe4 from './images/fe 4.png';
+import heroImg from "./images/hero1.PNG"; // matches disk name exactly
+
+// These imports match your current filenames with spaces.
+// If you rename the files to fe1.png, fe2.png, etc., update these imports accordingly.
+import fe1 from "./images/fe 1.png";
+import fe2 from "./images/fe 2.png";
+import fe3 from "./images/fe 3.png";
+import fe4 from "./images/fe 4.png";
+
 import t1 from "./images/t1.png";
 import t2 from "./images/t2.png";
 import t3 from "./images/t3.png";
 import t4 from "./images/t4.png";
 import t5 from "./images/t5.png";
 import t6 from "./images/t6.png";
+
 import fl1 from "./images/fl-1.png";
 import fl2 from "./images/fl-2.png";
 import fl3 from "./images/fl-3.png";
 import fl4 from "./images/fl-4.png";
+
 import google from "./images/google.png";
 import uber from "./images/uber.png";
 import yahoo from "./images/yahoo.png";
@@ -46,9 +53,9 @@ const Home = () => {
             <img className="logo" src={logo} alt="Logo" />
           </a>
           <ul id="menu">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Browse</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="#browse">Browse</a></li>
+            <li><a href="/contact">Contact</a></li>
             <li><button id="w-btn">Join</button></li>
           </ul>
         </div>
@@ -59,10 +66,13 @@ const Home = () => {
         <div className="hero-box">
           <div className="h-left">
             <h2>Find the perfect freelance services for your business</h2>
-            <p>Work with talented people at the most affordable price to get the most out of your time and cost</p>
+            <p>
+              Work with talented people at the most affordable price to get the most
+              out of your time and cost
+            </p>
             <div className="search">
               <input type="text" placeholder="Search your job here" />
-              <a href="#">Search</a>
+              <a href="#search">Search</a>
             </div>
           </div>
 
@@ -73,7 +83,7 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
-      <section className="features sec-space obj-width">
+      <section className="features sec-space obj-width" id="browse">
         <h2>Need something done?</h2>
         <p className="sub-text">Most viewed and all-time top-selling services</p>
 
@@ -107,16 +117,28 @@ const Home = () => {
         <p>Most viewed and all time top selling services</p>
 
         <ul className="job-id">
-          <li className={activeJobFilter === "all" ? "active" : ""} onClick={() => setActiveJobFilter("all")}>
+          <li
+            className={activeJobFilter === "all" ? "active" : ""}
+            onClick={() => setActiveJobFilter("all")}
+          >
             Recent Jobs
           </li>
-          <li className={activeJobFilter === "freelance" ? "active" : ""} onClick={() => setActiveJobFilter("freelance")}>
+          <li
+            className={activeJobFilter === "freelance" ? "active" : ""}
+            onClick={() => setActiveJobFilter("freelance")}
+          >
             Freelancer
           </li>
-          <li className={activeJobFilter === "fullTime" ? "active" : ""} onClick={() => setActiveJobFilter("fullTime")}>
+          <li
+            className={activeJobFilter === "fullTime" ? "active" : ""}
+            onClick={() => setActiveJobFilter("fullTime")}
+          >
             Full Time
           </li>
-          <li className={activeJobFilter === "partTime" ? "active" : ""} onClick={() => setActiveJobFilter("partTime")}>
+          <li
+            className={activeJobFilter === "partTime" ? "active" : ""}
+            onClick={() => setActiveJobFilter("partTime")}
+          >
             Part Time
           </li>
         </ul>
@@ -227,31 +249,31 @@ const Home = () => {
           <div className="bottom">
             <div>
               <h3>Project</h3>
-              <a href="#">Change log</a>
-              <a href="#">Status</a>
-              <a href="#">License</a>
-              <a href="#">All versions</a>
+              <a href="#changelog">Change log</a>
+              <a href="#status">Status</a>
+              <a href="#license">License</a>
+              <a href="#versions">All versions</a>
             </div>
             <div>
               <h3>Community</h3>
-              <a href="#">Github</a>
-              <a href="#">Your Problems</a>
-              <a href="#">Twitter</a>
-              <a href="#">LinkedIn</a>
+              <a href="https://github.com">Github</a>
+              <a href="#problems">Your Problems</a>
+              <a href="https://twitter.com">Twitter</a>
+              <a href="https://linkedin.com">LinkedIn</a>
             </div>
             <div>
               <h3>Help</h3>
-              <a href="#">Support</a>
-              <a href="#">Troubleshooting</a>
-              <a href="#">Contact us</a>
-              <a href="#">FAQ</a>
+              <a href="#support">Support</a>
+              <a href="#troubleshooting">Troubleshooting</a>
+              <a href="#contact">Contact us</a>
+              <a href="#faq">FAQ</a>
             </div>
             <div>
               <h3>Others</h3>
-              <a href="#">Terms and services</a>
-              <a href="#">Privacy</a>
-              <a href="#">Licence</a>
-              <a href="#">Cookie policy</a>
+              <a href="#terms">Terms and services</a>
+              <a href="#privacy">Privacy</a>
+              <a href="#licence">Licence</a>
+              <a href="#cookies">Cookie policy</a>
             </div>
           </div>
         </div>
