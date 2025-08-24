@@ -2,10 +2,7 @@ import React, { useMemo, useState } from "react";
 import "./home.css";
 
 import logo from "./images/logo.png";
-import heroImg from "./images/hero1.PNG"; // matches disk name exactly
-
-// These imports match your current filenames with spaces.
-// If you rename the files to fe1.png, fe2.png, etc., update these imports accordingly.
+import heroImg from "./images/hero1.PNG"; 
 import fe1 from "./images/fe 1.png";
 import fe2 from "./images/fe 2.png";
 import fe3 from "./images/fe 3.png";
@@ -29,10 +26,10 @@ import yahoo from "./images/yahoo.png";
 import linkedin from "./images/linkedin.png";
 
 const jobsData = [
-  { id: 1, type: "fullTime", img: google, title: "Web Developer", salary: "$750-1000/month", jobType: "Full Time" },
-  { id: 2, type: "freelance", img: uber, title: "Freelancer", salary: "$750-1000/month", jobType: "Freelancer" },
-  { id: 3, type: "partTime", img: yahoo, title: "Web Developer", salary: "$750-1000/month", jobType: "Full Time" },
-  { id: 4, type: "partTime", img: linkedin, title: "Business Associate", salary: "$750-1000/month", jobType: "Part Time" },
+  { id: 1, type: "fullTime", img: google, title: "Web Developer", salary: "$750-1000/month", jobType: <span id="key">Full Time</span> },
+  { id: 2, type: "freelance", img: uber, title: "Freelancer", salary: "$750-1000/month", jobType: <span id="key">Freelancer</span> },
+  { id: 3, type: "partTime", img: yahoo, title: "Web Developer", salary: "$750-1000/month", jobType: <span id="key">Part Time</span> },
+  { id: 4, type: "partTime", img: linkedin, title: "Business Associate", salary: "$750-1000/month", jobType: <span id="key">Part Time</span> },
 ];
 
 const Home = () => {
@@ -179,9 +176,9 @@ const Home = () => {
             <img src={fl1} alt="John Smith" />
             <h3>John Smith</h3>
             <div className="skill">
-              <span className="key">HTML</span>
-              <span className="key">CSS</span>
-              <span className="key">JavaScript</span>
+              <span id="key">HTML</span>
+              <span id="key">CSS</span>
+              <span id="key">JavaScript</span>
             </div>
             <button>View Profile</button>
           </div>
@@ -190,9 +187,9 @@ const Home = () => {
             <img src={fl2} alt="Jane Doe" />
             <h3>Jane Doe</h3>
             <div className="skill">
-              <span className="key">HTML</span>
-              <span className="key">CSS</span>
-              <span className="key">JavaScript</span>
+              <span id="key">HTML</span>
+              <span id="key">CSS</span>
+              <span id="key">JavaScript</span>
             </div>
             <button>View Profile</button>
           </div>
@@ -201,9 +198,9 @@ const Home = () => {
             <img src={fl3} alt="Michael Brown" />
             <h3>Michael Brown</h3>
             <div className="skill">
-              <span className="key">HTML</span>
-              <span className="key">CSS</span>
-              <span className="key">JavaScript</span>
+              <span id="key">HTML</span>
+              <span id="key">CSS</span>
+              <span id="key">JavaScript</span>
             </div>
             <button>View Profile</button>
           </div>
@@ -212,9 +209,9 @@ const Home = () => {
             <img src={fl4} alt="Thesera Ray" />
             <h3>Thesera Ray</h3>
             <div className="skill">
-              <span className="key">HTML</span>
-              <span className="key">CSS</span>
-              <span className="key">JavaScript</span>
+              <span id="key">HTML</span>
+              <span id="key">CSS</span>
+              <span id="key">JavaScript</span>
             </div>
             <button>View Profile</button>
           </div>
