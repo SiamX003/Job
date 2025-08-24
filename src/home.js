@@ -2,10 +2,7 @@ import React, { useMemo, useState } from "react";
 import "./home.css";
 
 import logo from "./images/logo.png";
-import heroImg from "./images/hero1.PNG"; // matches disk name exactly
-
-// These imports match your current filenames with spaces.
-// If you rename the files to fe1.png, fe2.png, etc., update these imports accordingly.
+import heroImg from "./images/hero1.PNG"; 
 import fe1 from "./images/fe 1.png";
 import fe2 from "./images/fe 2.png";
 import fe3 from "./images/fe 3.png";
