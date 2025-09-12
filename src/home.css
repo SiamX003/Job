@@ -1,108 +1,112 @@
+/* ================= BASE / RESET ================= */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap");
 
 * {
-   margin: 0;
-   padding: 0;
-   box-sizing: border-box;
-   font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
 body {
   position: relative;
+  background: #f9f9f9;
+  color: #222;
+  line-height: 1.6;
 }
 
+/* ================= HEADINGS ================= */
 h1 {
-  font-size: 3rem;
-  font-weight: 600;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
 }
-
 h2 {
-  font-size: 2rem;
+  font-size: clamp(1.8rem, 4vw, 2rem);
   font-weight: 600;
-  line-height: 50px;
+  line-height: 1.3;
 }
-
 h3 {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
   font-weight: 600;
   padding-bottom: 1rem;
 }
 
-#w-btn{
+/* ================= BUTTONS ================= */
+#w-btn {
   margin-left: 40px;
   background-color: #fff;
   color: #1f4a40;
   padding: 9px 30px;
   border-radius: 20px;
   font-weight: 500;
-  font-size: 1.2rem;
-  box-shadow: none;
+  font-size: 1.1rem;
   border: none;
+  box-shadow: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+#w-btn:hover { background: #51a995; color: #fff; }
+
+#g-btn {
+  background-color: #1f4a2a;
+  color: #fff;
+  margin: 20px 0 0 50px;
+  padding: 5px 15px;
+  border-radius: 30px;
+  display: inline-block;
 }
 
+/* ================= UTILITIES ================= */
+.sec-space { padding: 4rem 0; }
+.extra-space { padding: 8rem 0; }
+.obj-width { max-width: 1200px; margin: auto; }
 
+/* ================= HEADER / NAV ================= */
+header { background-color: #1f4a40; }
 
-.sec-space{
-  padding: 4rem 0;
-}
-
-.extra-space {
-  padding-top: 8rem 0;
-}
-
-.obj-width {
-  max-width: 1200px;
-  margin: auto;
-}
-
-header {
-  background-color: #1f4a40;
-}
-
-#navbar{
+#navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 80px;
+  padding: 0 1.5rem;
 }
+#navbar .logo { width: 120px; }
 
-#navbar .logo {
-  width: 120px;
-}
-
-#menu{
+#menu {
   display: flex;
   justify-content: center;
   align-items: center;
   list-style: none;
+  gap: 2rem;
 }
-
-#menu li a{
+#menu li a {
   color: #fff;
   text-decoration: none;
-  margin-left: 40px;
   font-size: 1.1rem;
   font-weight: 500;
 }
-
-#bar{
+#bar {
   display: none;
   color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
 }
 
-
+/* ================= HERO ================= */
 .hero {
   background-color: #1f4a40;
   padding: 4rem 0;
 }
-
 .hero-box {
   display: flex;
   align-items: center;
-  min-height: 80vh; 
-  padding-left: 5rem; 
+  min-height: 80vh;
+  padding-left: 5rem;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
-
 .h-left {
   width: 50%;
   color: white;
@@ -110,49 +114,52 @@ header {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 1.5rem;
 }
-
-
 .h-left h1 {
-  font-size: 3.5rem;
-  line-height: .5;
-  margin-bottom: 1.5rem;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  margin: 0 0 0.5rem 0;
   font-weight: 700;
 }
-
 .h-left p {
   font-size: 1.1rem;
   line-height: 1.5;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   max-width: 90%;
 }
-
 .h-right {
   width: 50%;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
+.h-right img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+/* ================= FEATURES ================= */
 .features {
   text-align: center;
   padding: 2rem 1rem;
+  background: #fff;
 }
-
 .features h2 {
-  font-size: 2rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
-  background: #2563eb; /* Blue bar */
+  background: #2563eb;
   color: white;
   display: inline-block;
   padding: 0.3rem 0.8rem;
   border-radius: 6px;
 }
-
 .features p.sub-text {
   color: #666;
   margin-bottom: 2rem;
 }
-
 .features .fe-box {
   display: flex;
   justify-content: space-between;
@@ -162,32 +169,31 @@ header {
   max-width: 1200px;
   margin: auto;
 }
-
 .features .fe-box div {
-  flex: 1 1 220px; /* flexible columns */
+  flex: 1 1 220px;
   text-align: center;
   padding: 1.5rem 1rem;
   border-radius: 10px;
   transition: all 0.3s ease;
   cursor: pointer;
   background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
-
 .features .fe-box div:hover {
   transform: translateY(-8px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
 }
-
 .features .fe-box img {
   width: 50px;
   margin-bottom: 1rem;
   transition: transform 0.3s ease;
 }
+.features .fe-box div:hover img { transform: scale(1.1); }
 
-.features .fe-box div:hover img {
-  transform: scale(1.1);
-}
+/* ================= JOBS (V1 EXACT LOOK/RESPONSIVENESS) ================= */
+.jobs { padding: 5rem 1.5rem; }
 
+/* Tabs strip exactly like v1 */
 .jobs .job-id{
   margin-top: 3rem;
   display: flex;
@@ -195,22 +201,26 @@ header {
   align-items: center;
   list-style: none;
   box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+  gap: 0;
+  overflow-x: visible;
 }
-
 .jobs .job-id li{
   padding: 20px 40px;
   cursor: pointer;
   color: black;
+  background: transparent;
+  border-radius: 0;
+  white-space: nowrap;
 }
-
 .jobs .job-id li.active{
   background: #51a995;
   color: white;
 }
 
+/* V1 grid container (jList IS the grid) */
 .jobs .jList{
   margin-top: 3rem;
-  display: grid;
+  display: grid !important;
   grid-template-columns: repeat(4,1fr);
   border: 1px solid #ccc;
   align-items: center;
@@ -218,28 +228,41 @@ header {
   cursor: pointer;
   color: black;
   padding: 2rem 2rem;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  transform: none;
 }
+.jobs .jList:hover{ background: #e6fffb; }
+.jobs .jList img{ width: 40px; height: auto; object-fit: contain; }
+.jobs .jList h3{ padding-bottom: 0; }
 
-.jobs .jList:hover{
-  background: #e6fffb;
-}
+/* If a card wrapper existed in v2, neutralize it */
+.jobs-container{ all: unset; display: contents; }
 
-
-.jobs .jList img{
-  width: 40px;
-}
-
-.jobs .jList h3{
-  padding-bottom: 0;
-}
-
-.h-right img {
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
+/* Optional: search form (kept from v2 if you use it) */
+.jobs form {
+  margin-top: 2rem;
+  border: 1px solid #2563eb;
   border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: #fff;
+}
+.jobs form i { margin-right: 0.5rem; font-size: 1.2rem; }
+.jobs form input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 1rem;
 }
 
+/* ================= TRUST ================= */
+.trust {
+  padding: 5rem 1.5rem;
+  background: #fff;
+}
 .trust .t-box {
   display: flex;
   align-items: center;
@@ -248,18 +271,17 @@ header {
   gap: 2rem;
   padding-top: 3rem;
 }
+.trust .t-box img { margin: 1rem 1rem 1rem 0; }
 
-.trust .t-box img {
-  margin: 1rem 1rem 1rem 0;
-}
-
+/* ================= TEAM / HIGHEST RATED FREELANCERS (V1 EXACT) ================= */
 .team-container {
   text-align: center;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  gap: 0;
+  padding: 0;
 }
-
 .team-container .fl-box {
   padding: 2rem 0;
   border-radius: 20px;
@@ -271,13 +293,11 @@ header {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: transparent;
+  box-shadow: none;
+  transition: none;
 }
-
-.fl-box {
-  margin-bottom: 1rem;
-  border-radius: 50%;
-}
-
+.fl-box { margin-bottom: 1rem; border-radius: 50%; }
 .team-container .fl-box img {
   width: 120px;
   height: 120px;
@@ -285,11 +305,11 @@ header {
   border-radius: 50%;
   margin-bottom: 1rem;
 }
-.skill{
-  padding-bottom: 2rem;
-}
 
+/* badges/skills */
+.skill{ padding-bottom: 2rem; }
 #key{
+  display: inline-block;
   font-weight: bold;
   font-size: .9rem;
   background-color: #edcfee;
@@ -298,13 +318,13 @@ header {
   margin: 0 5px;
 }
 
+/* ================= FOOTER ================= */
 footer {
   background-color: #1f4a40;
   color: white;
-  padding: 4rem 0;
+  padding: 4rem 1.5rem;
 }
-
-.top {
+footer .top {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -313,43 +333,29 @@ footer {
   padding-bottom: 1rem;
   padding-inline-end: 1rem;
 }
-
-.top .logo {
-  width: 170px;
-  margin-bottom: 1rem;
-} 
-
-.top i{
+footer .top .logo { width: 170px; margin-bottom: 1rem; }
+footer .top i {
   color: white;
   font-size: 2rem;
   margin-left: .5rem;
 }
-
-.bottom {
+footer .bottom {
   text-align: start;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   padding-top: 2rem;
 }
-
-.bottom div{
-  display: flex;
-  flex-direction: column;
-}
-
-.bottom a{
+footer .bottom div{ display: flex; flex-direction: column; }
+footer .bottom a{
   color: white;
   text-decoration: none;
   line-height: 35px;
   font-size: 1rem;
 }
 
-.search {
-  position: relative;
-  max-width: 500px;
-}
-
+/* ================= SEARCH (footer/search bar) ================= */
+.search { position: relative; max-width: 500px; }
 .search input {
   width: 100%;
   padding: 1rem 2.5rem;
@@ -358,7 +364,6 @@ footer {
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   font-size: 1rem;
 }
-
 .search a {
   position: absolute;
   right: 5px;
@@ -372,7 +377,13 @@ footer {
   font-weight: 500;
 }
 
-@media (max-width: 480px) {
+/* ================= RESPONSIVE ================= */
+@media (max-width: 992px) {
+  /* Jobs cards were disabled; nothing to change here for v1 */
+}
+
+@media (max-width: 768px) {
+  /* Mobile menu: v1 slide-out */
   #menu {
     display: block;
     background-color: #fff;
@@ -386,115 +397,61 @@ footer {
     border-radius: 13px;
     opacity: 0;
     transition: all 0.3s ease;
+    flex-direction: column;
   }
+  #menu.active { right: 10px; opacity: 1; }
+  #menu li { padding: 1rem 0; }
+  #menu li a { color: #1f4a40; }
+  #bar { display: block; font-size: 1.7rem; cursor: pointer; }
 
- #menu.active {
-    right: 10px;
-    opacity: 1;
- }
-
-#menu li {
-    padding: 1rem 0;
-  }
-
-  #menu li a {
-    color: #1f4a40;
-  }
-
-  #bar {
-    display: block;
-    font-size: 2rem;
-    margin-right: 20px;
-    cursor: pointer;
-  }
-
-#bar {
-    display: block;
-    font-size: 1.7rem;
-    cursor: pointer;
-  }
-
-#g-btn {
-  background-color: #1f4a2a;
-  color: #fff;
-  margin: 20px 0 0 50px;
-  padding: 5px 15px;
-  border-radius: 30px;
-}
-
-.hero-box{
-  flex-direction: column-reverse;
-  justify-content: center;
-  height: auto;
-  align-items: start;
-  padding: 8rem 0;
-}
-
-.h-left{
-  width: 100%;
-  padding-left: 4rem; 
-}
-
-.h-right{
-  display: none;
-}
-
- .features .fe-box {
+  .hero-box {
+    flex-direction: column-reverse;
     justify-content: center;
+    height: auto;
+    align-items: start;
+    padding: 8rem 0;
+    text-align: left;
+    gap: 2rem;
   }
+  .h-left { width: 100%; padding-left: 4rem; padding-right: 2rem; }
+  .h-right { display: none; }
 
-  .features .fe-box div {
-    flex: 1 1 45%;
-  }
-
+  /* Jobs tabs scroll (v1) */
   .jobs .job-id{
-  position: relative;
-  width: 100%;
-  overflow-x: scroll;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+    position: relative;
+    width: 100%;
+    overflow-x: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .jobs .job-id::-webkit-scrollbar{ display: none; }
+  .jobs .job-id li{ padding: 20px 30px; text-wrap: nowrap; }
+
+  /* Team boxes two-per-row (v1) */
+  .team-container .fl-box{
+    width: 48%;
+    margin-top: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    background: transparent;
   }
 
-  .jobs .job-id li{
-  padding: 20px 30px;
-  text-wrap: nowrap;
+  .skill { padding-bottom: 1rem; }
+  footer .top i{ margin-left: 1rem; }
+  footer .bottom div{ width: 50%; margin-bottom: 50px; }
 }
 
-.jobs container{
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-}
+@media (max-width: 480px) {
+  #bar { display: block; font-size: 2rem; margin-right: 20px; }
 
-.jobs .jList{
-  margin-top: 3rem;
-  width: 50%;
-  grid-template-columns: repeat(1,1fr);
-  grid-gap: 15px;
-  padding: 2rem 1rem;
-  text-align: center;
-  justify-items: center;
-}
-
-.team-container .fl-box {
-  width: 48%;
-  margin-top: 1rem;
-  border-radius: 10px;
-  text-align: center;
-}
-
-.skill {
-  padding-bottom: 1rem;
-}
-
-.top i{
-  margin-left: 1rem 1rem 0 0;
-}
-
-.bottom div{
-  width: 50%;
-  margin-bottom: 50px;
-}
-
+  /* Jobs grid collapses to one column inside a 50% container (v1 behavior) */
+  .jobs .jList{
+    margin-top: 3rem;
+    width: 50%;
+    grid-template-columns: repeat(1,1fr);
+    grid-gap: 15px;
+    padding: 2rem 1rem;
+    text-align: center;
+    justify-items: center;
+  }
 }
