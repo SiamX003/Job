@@ -1,3 +1,4 @@
+// middlewares/auth.js
 import jwt from "jsonwebtoken";
 
 const auth = async (req, res, next) => {
@@ -29,4 +30,4 @@ const auth = async (req, res, next) => {
   }
 };
 
-export default auth;
+export default auth; // ✅ Make sure this line exists

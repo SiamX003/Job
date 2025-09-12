@@ -1,12 +1,13 @@
 import { Router } from "express";
 import {
-    getProfileController,
-    loginUserController,
-    logoutController,
-    registerUserController,
-    verifyEmailController,
+  getProfileController,
+  loginUserController,
+  logoutController,
+  registerUserController,
+  verifyEmailController,
 } from "../controllers/user.controller.js";
-import auth from "../middlewares/auth.js";
+
+import auth from "../middlewares/auth.js"; // ✅ Default import
 
 const userRouter = Router();
 
