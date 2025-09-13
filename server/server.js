@@ -1,3 +1,4 @@
+// server/server.js (or index.js)
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -6,28 +7,28 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import connectDB from "./config/connectDB.js";
-import userRouter from "./routes/user.route.js";
+import contactRouter from "./routes/contact.route.js"; // ✅ this path matches your file
 
 dotenv.config();
 
 const app = express();
 
-// ===== Middleware =====
+// middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(morgan("dev"));
 
-// ===== Routes =====
-app.use("/api/user", userRouter);
+// routes
+app.use("/apicontact", contactRouter); // ✅ matches your React/Thunder URL
 
-// ===== Test route =====
-app.get("/", (req, res) => res.json({ message: `Server running on port ${process.env.PORT}` }));
+app.get("/health", (_req, res) => res.json({ ok: true }));
 
-// ===== Start server =====
+const PORT = process.env.PORT || 1000;
+
 connectDB().then(() => {
-  app.listen(process.env.PORT || 1000, () => {
-    console.log(`✅ Server running on port ${process.env.PORT}`);
+  app.listen(PORT, () => {
+    console.log(`✅ Server running on port ${PORT}`);
   });
 });

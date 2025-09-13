@@ -1,13 +1,16 @@
-import { Router } from "express";
-import { createContactController, getAllContactsController } from "../controllers/contact.controller.js";
-import auth from "../middlewares/auth.js"; // optional, protect admin route
+// server/routes/contact.route.js
+import express from "express";
+import {
+  createContactController,
+  getAllContactsController,
+} from "../controllers/contact.controller.js";
 
-const router = Router();
+const router = express.Router();
 
-// POST /api/contact -> save new message
+// POST /apicontact  -> save a new contact message
 router.post("/", createContactController);
 
-// GET /api/contact -> list all messages (protected)
-router.get("/", auth, getAllContactsController);
+// GET /apicontact   -> list all messages (optional admin view)
+router.get("/", getAllContactsController);
 
 export default router;
