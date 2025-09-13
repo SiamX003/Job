@@ -1,33 +1,61 @@
-import React, { useEffect, useState } from "react";
-import API from "./api";
+// Profile.js
+import React, { useEffect, useState } from 'react';
+import { useAuth } from './AuthContext';
+import API from './api';
 
 function Profile() {
-  const [user, setUser] = useState(null);
+  const { user } = useAuth();
+  const [jobs, setJobs] = useState([]);
+  const [loadingJobs, setLoadingJobs] = useState(true);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem("token"); // get JWT from localStorage
-        const res = await API.get("/users/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(res.data);
-      } catch (err) {
-        alert(err.response?.data?.message || "Error fetching profile");
-      }
-    };
+    if (user?.role === 'recruiter') {
+      fetchMyJobs();
+    }
+  }, [user]);
 
-    fetchProfile();
-  }, []);
-
-  if (!user) return <p>Loading...</p>;
+  const fetchMyJobs = async () => {
+    try {
+      setLoadingJobs(true);
+      const token = localStorage.getItem('token');
+      const res = await API.get('/jobs', { headers: { Authorization: `Bearer ${token}` } });
+      // Filter only jobs posted by this user
+      const myJobs = res.data.filter(job => job.postedBy._id === user.id);
+      setJobs(myJobs);
+    } catch (err) {
+      console.error('Failed to fetch jobs', err);
+    } finally {
+      setLoadingJobs(false);
+    }
+  };
 
   return (
-    <div>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
       <h1>Profile</h1>
-      <p>Name: {user.name}</p>
-      <p>Email: {user.email}</p>
-      <p>Role: {user.role}</p>
+      <div style={{ marginBottom: '2rem' }}>
+        <p><strong>Name:</strong> {user?.name}</p>
+        <p><strong>Email:</strong> {user?.email}</p>
+        <p><strong>Role:</strong> {user?.role}</p>
+      </div>
+
+      {user?.role === 'recruiter' && (
+        <div>
+          <h2>My Job Postings</h2>
+          {loadingJobs ? (
+            <p>Loading jobs...</p>
+          ) : jobs.length === 0 ? (
+            <p>You haven't posted any jobs yet.</p>
+          ) : (
+            <ul>
+              {jobs.map(job => (
+                <li key={job._id}>
+                  {job.title} - {job.company} ({job.location})
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   );
 }
