@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './Contact.css';
 
 function Contact() {
@@ -7,6 +8,9 @@ function Contact() {
     email: '',
     message: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleChange = (e) => {
     setFormData({
@@ -15,10 +19,28 @@ function Contact() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Thank you for your message! We will get back to you soon.');
-    setFormData({ name: '', email: '', message: '' });
+    setLoading(true);
+    setSuccessMsg('');
+    setErrorMsg('');
+
+    try {
+      const response = await axios.post('http://localhost:1000/apicontact', formData, {
+        withCredentials: true
+      });
+
+      if (response.data.success) {
+        setSuccessMsg('Thank you for your message! We will get back to you soon.');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        setErrorMsg(response.data.message || 'Something went wrong.');
+      }
+    } catch (error) {
+      setErrorMsg(error.response?.data?.message || 'Server error.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,6 +57,8 @@ function Contact() {
 
       <div className="contact-form">
         <h2>Send us a Message</h2>
+        {successMsg && <p className="success-msg">{successMsg}</p>}
+        {errorMsg && <p className="error-msg">{errorMsg}</p>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <input 
@@ -65,7 +89,9 @@ function Contact() {
               required
             />
           </div>
-          <button type="submit">Send Message</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Sending...' : 'Send Message'}
+          </button>
         </form>
       </div>
     </div>
