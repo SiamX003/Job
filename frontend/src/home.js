@@ -1,8 +1,10 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import "./home.css";
+import "./Contact.css";
 
 import logo from "./images/logo.png";
-import heroImg from "./images/hero1.PNG"; 
+import heroImg from "./images/hero1.PNG";
+
 import fe1 from "./images/fe 1.png";
 import fe2 from "./images/fe 2.png";
 import fe3 from "./images/fe 3.png";
@@ -34,38 +36,82 @@ const jobsData = [
 
 const Home = () => {
   const [activeJobFilter, setActiveJobFilter] = useState("all");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [authTab, setAuthTab] = useState("login");
 
-  const filteredJobs = useMemo(() => {
-    return activeJobFilter === "all"
-      ? jobsData
-      : jobsData.filter((job) => job.type === activeJobFilter);
-  }, [activeJobFilter]);
+  const modalOverlayRef = useRef(null);
+  const loginEmailRef = useRef(null);
+
+  const filteredJobs = useMemo(
+    () => (activeJobFilter === "all" ? jobsData : jobsData.filter((j) => j.type === activeJobFilter)),
+    [activeJobFilter]
+  );
+
+  // Close modal on ESC
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && setModalOpen(false);
+    if (modalOpen) window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [modalOpen]);
+
+  // Autofocus email on login tab
+  useEffect(() => {
+    if (modalOpen && authTab === "login") setTimeout(() => loginEmailRef.current?.focus(), 0);
+  }, [modalOpen, authTab]);
+
+  const openModal = () => {
+    setAuthTab("login");
+    setModalOpen(true);
+  };
+  const closeModal = () => setModalOpen(false);
+  const onModalBackgroundClick = (e) => {
+    if (e.target === modalOverlayRef.current) closeModal();
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    alert("Logged in (demo)");
+    closeModal();
+  };
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    alert("Account created (demo)");
+    closeModal();
+  };
 
   return (
     <div>
       {/* Navbar */}
       <header>
         <div id="navbar" className="obj-width">
-          <a href="/">
+          <a href="/" className="brand">
             <img className="logo" src={logo} alt="Logo" />
           </a>
-          <ul id="menu">
-            <li><a href="/">Home</a></li>
+
+          <button id="bar" aria-label="Toggle menu" onClick={() => setMenuOpen((s) => !s)}>
+            ☰
+          </button>
+
+          {/* EXACTLY: Browse · Home · Join */}
+          <ul id="menu" className={menuOpen ? "active" : ""} aria-label="Primary">
             <li><a href="#browse">Browse</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><button id="w-btn">Join</button></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/Contact">Contact</a></li>
+            <li><button id="w-btn" onClick={openModal}>Join</button></li>
           </ul>
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero (full screen) */}
       <section className="hero">
-        <div className="hero-box">
+        <div className="hero-box obj-width">
           <div className="h-left">
-            <h2>Find the perfect freelance services for your business</h2>
+            <h1>Find the perfect freelance services for your business</h1>
             <p>
               Work with talented people at the most affordable price to get the most
-              out of your time and cost
+              out of your time and cost.
             </p>
             <div className="search">
               <input type="text" placeholder="Search your job here" />
@@ -79,7 +125,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features */}
       <section className="features sec-space obj-width" id="browse">
         <h2>Need something done?</h2>
         <p className="sub-text">Most viewed and all-time top-selling services</p>
@@ -108,36 +154,16 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Jobs Section */}
+      {/* Jobs */}
       <section className="jobs sec-space obj-width">
         <h2>Jobs in Demand</h2>
         <p>Most viewed and all time top selling services</p>
 
         <ul className="job-id">
-          <li
-            className={activeJobFilter === "all" ? "active" : ""}
-            onClick={() => setActiveJobFilter("all")}
-          >
-            Recent Jobs
-          </li>
-          <li
-            className={activeJobFilter === "freelance" ? "active" : ""}
-            onClick={() => setActiveJobFilter("freelance")}
-          >
-            Freelancer
-          </li>
-          <li
-            className={activeJobFilter === "fullTime" ? "active" : ""}
-            onClick={() => setActiveJobFilter("fullTime")}
-          >
-            Full Time
-          </li>
-          <li
-            className={activeJobFilter === "partTime" ? "active" : ""}
-            onClick={() => setActiveJobFilter("partTime")}
-          >
-            Part Time
-          </li>
+          <li className={activeJobFilter === "all" ? "active" : ""} onClick={() => setActiveJobFilter("all")}>Recent Jobs</li>
+          <li className={activeJobFilter === "freelance" ? "active" : ""} onClick={() => setActiveJobFilter("freelance")}>Freelancer</li>
+          <li className={activeJobFilter === "fullTime" ? "active" : ""} onClick={() => setActiveJobFilter("fullTime")}>Full Time</li>
+          <li className={activeJobFilter === "partTime" ? "active" : ""} onClick={() => setActiveJobFilter("partTime")}>Part Time</li>
         </ul>
 
         <div className="jobs-container">
@@ -152,7 +178,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Trust Section */}
+      {/* Trusted logos */}
       <section className="trust sec-space obj-width">
         <h2>Trusted by the world's best</h2>
         <p>Most viewed all time</p>
@@ -166,7 +192,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Team Section */}
+      {/* Team */}
       <section className="highest sec-space obj-width">
         <h2>Highest Rated Freelancers</h2>
         <p>Most viewed and all-time top-selling services</p>
@@ -219,7 +245,7 @@ const Home = () => {
       </section>
 
       {/* Footer */}
-      <footer className="footer">
+      <footer>
         <div className="obj-width">
           <div className="top">
             <img className="logo" src={logo} alt="Logo" />
@@ -275,6 +301,73 @@ const Home = () => {
           </div>
         </div>
       </footer>
+
+      {/* JOIN MODAL */}
+      {modalOpen && (
+        <div
+          id="join-modal"
+          className="modal-overlay show"
+          aria-hidden={false}
+          ref={modalOverlayRef}
+          onClick={onModalBackgroundClick}
+        >
+          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="join-title" onClick={(e) => e.stopPropagation()}>
+            <header className="modal-head">
+              <h3 id="join-title">Welcome</h3>
+              <button className="close-x" aria-label="Close" onClick={closeModal}>&times;</button>
+            </header>
+
+            <nav className="tabs" aria-label="Auth tabs">
+              <button
+                className={`tab-btn ${authTab === "login" ? "active" : ""}`}
+                onClick={() => setAuthTab("login")}
+              >
+                Log in
+              </button>
+              <button
+                className={`tab-btn ${authTab === "register" ? "active" : ""}`}
+                onClick={() => setAuthTab("register")}
+              >
+                Register
+              </button>
+            </nav>
+
+            <div className="modal-body">
+              {authTab === "login" && (
+                <form id="login-pane" className="tab-pane active" onSubmit={handleLogin}>
+                  <div className="form-group">
+                    <label htmlFor="login-email">Email</label>
+                    <input id="login-email" ref={loginEmailRef} className="input" type="email" placeholder="you@example.com" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="login-password">Password</label>
+                    <input id="login-password" className="input" type="password" placeholder="••••••••" required />
+                  </div>
+                  <button type="submit" className="btn primary full">Log in</button>
+                </form>
+              )}
+
+              {authTab === "register" && (
+                <form id="register-pane" className="tab-pane active" onSubmit={handleRegister}>
+                  <div className="form-group">
+                    <label htmlFor="reg-name">Full name</label>
+                    <input id="reg-name" className="input" type="text" placeholder="John Doe" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="reg-email">Email</label>
+                    <input id="reg-email" className="input" type="email" placeholder="you@example.com" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="reg-password">Password</label>
+                    <input id="reg-password" className="input" type="password" placeholder="Create a password" required />
+                  </div>
+                  <button type="submit" className="btn primary full">Create account</button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
