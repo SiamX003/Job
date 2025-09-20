@@ -88,100 +88,169 @@ const validateCoverLetter = (coverLetter) => {
 
   return { isValid: true, cleanCoverLetter: trimmedLetter || undefined };
 };
-
 exports.apply = async (req, res) => {
   try {
     const { jobId, resumeLink, coverLetter } = req.body;
     const candidateId = req.user.id;
-
+    
+    console.log("=== APPLICATION DEBUG ===");
+    console.log("Request body:", req.body);
+    console.log("User:", req.user);
+    
     // Validate candidate role
     if (req.user.role !== 'candidate') {
       return res.status(403).json({ message: "Only candidates can apply for jobs" });
     }
-
-    // Validate jobId
-    const jobIdValidation = validateObjectId(jobId, "Job ID");
-    if (!jobIdValidation.isValid) {
-      return res.status(400).json({ message: jobIdValidation.message });
-    }
-
-    // Validate resume link
-    const resumeValidation = validateResumeLink(resumeLink);
-    if (!resumeValidation.isValid) {
-      return res.status(400).json({ message: resumeValidation.message });
-    }
-
-    // Validate cover letter
-    const coverLetterValidation = validateCoverLetter(coverLetter);
-    if (!coverLetterValidation.isValid) {
-      return res.status(400).json({ message: coverLetterValidation.message });
-    }
-
-    // Check if job exists and is active
+    
+    // Check if job exists
     const job = await Job.findById(jobId);
+    console.log("Job found:", job);
+    
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
     }
-
-    // Check if job is still active/open for applications
-    if (job.status && job.status === 'closed') {
-      return res.status(400).json({ message: "This job is no longer accepting applications" });
-    }
-
-    // Prevent candidates from applying to their own jobs (if they're also recruiters)
-    if (job.recruiterId && job.recruiterId.toString() === candidateId) {
-      return res.status(400).json({ message: "You cannot apply to your own job posting" });
-    }
-
+    
     // Check for duplicate application
-    const existingApplication = await Application.findOne({
-      jobId: jobId,
-      candidateId: candidateId
+    const existingApplication = await Application.findOne({ 
+      jobId: jobId, 
+      candidateId: candidateId 
     });
-
+    
     if (existingApplication) {
-      return res.status(400).json({
+      return res.status(400).json({ 
         message: "You have already applied for this job",
         applicationId: existingApplication._id,
         status: existingApplication.status
       });
     }
-
-    // Get candidate's default resume if no resume provided
-    let finalResumeLink = resumeValidation.cleanLink;
-    if (!finalResumeLink) {
-      const candidate = await User.findById(candidateId).select('resumeLink');
-      finalResumeLink = candidate?.resumeLink;
-    }
-
-    // Create application
-    const application = new Application({
+    
+    // Create application data
+    const applicationData = {
       jobId: jobId,
       candidateId: candidateId,
-      recruiterId: job.recruiterId, // Store recruiter ID for easier queries
-      resumeLink: finalResumeLink,
-      coverLetter: coverLetterValidation.cleanCoverLetter,
+      recruiterId: job.postedBy,
+      resumeLink: resumeLink || undefined,
+      coverLetter: coverLetter || undefined,
       status: 'applied'
-    });
-
+    };
+    
+    console.log("Application data to save:", applicationData);
+    
+    // Create application
+    const application = new Application(applicationData);
+    
+    console.log("Application before save:", application.toObject());
+    
     await application.save();
-
-    // Populate the response with job and candidate details
-    await application.populate([
-      { path: 'jobId', select: 'title company location' },
-      { path: 'candidateId', select: 'name email' }
-    ]);
-
+    
+    console.log("Application after save:", application.toObject());
+    
     res.status(201).json({
       message: "Application submitted successfully",
       application: application
     });
-
+    
   } catch (err) {
     console.error("Application error:", err);
     res.status(500).json({ message: "Server error during application submission", error: err.message });
   }
 };
+//this is main code ... commented out for debugging
+// exports.apply = async (req, res) => {
+//   try {
+//     const { jobId, resumeLink, coverLetter } = req.body;
+//     ////debub line
+//     console.log("Application data received:", { jobId, resumeLink, coverLetter });
+//     const candidateId = req.user.id;
+
+//     // Validate candidate role
+//     if (req.user.role !== 'candidate') {
+//       return res.status(403).json({ message: "Only candidates can apply for jobs" });
+//     }
+
+//     // Validate jobId
+//     const jobIdValidation = validateObjectId(jobId, "Job ID");
+//     if (!jobIdValidation.isValid) {
+//       return res.status(400).json({ message: jobIdValidation.message });
+//     }
+
+//     // Validate resume link
+//     const resumeValidation = validateResumeLink(resumeLink);
+//     if (!resumeValidation.isValid) {
+//       return res.status(400).json({ message: resumeValidation.message });
+//     }
+
+//     // Validate cover letter
+//     const coverLetterValidation = validateCoverLetter(coverLetter);
+//     if (!coverLetterValidation.isValid) {
+//       return res.status(400).json({ message: coverLetterValidation.message });
+//     }
+
+//     // Check if job exists and is active
+//     const job = await Job.findById(jobId);
+//     if (!job) {
+//       return res.status(404).json({ message: "Job not found" });
+//     }
+
+//     // Check if job is still active/open for applications
+//     if (job.status && job.status === 'closed') {
+//       return res.status(400).json({ message: "This job is no longer accepting applications" });
+//     }
+
+//     // Prevent candidates from applying to their own jobs (if they're also recruiters)
+//     if (job.recruiterId && job.recruiterId.toString() === candidateId) {
+//       return res.status(400).json({ message: "You cannot apply to your own job posting" });
+//     }
+
+//     // Check for duplicate application
+//     const existingApplication = await Application.findOne({
+//       jobId: jobId,
+//       candidateId: candidateId
+//     });
+
+//     if (existingApplication) {
+//       return res.status(400).json({
+//         message: "You have already applied for this job",
+//         applicationId: existingApplication._id,
+//         status: existingApplication.status
+//       });
+//     }
+
+//     // Get candidate's default resume if no resume provided
+//     let finalResumeLink = resumeValidation.cleanLink;
+//     if (!finalResumeLink) {
+//       const candidate = await User.findById(candidateId).select('resumeLink');
+//       finalResumeLink = candidate?.resumeLink;
+//     }
+
+//     // Create application
+//     const application = new Application({
+//       jobId: jobId,
+//       candidateId: candidateId,
+//       recruiterId: job.postedBy, // Store recruiter ID for easier queries
+//       resumeLink: finalResumeLink,
+//       coverLetter: coverLetterValidation.cleanCoverLetter,
+//       status: 'applied'
+//     });
+
+//     await application.save();
+
+//     // Populate the response with job and candidate details
+//     await application.populate([
+//       { path: 'jobId', select: 'title company location' },
+//       { path: 'candidateId', select: 'name email' }
+//     ]);
+
+//     res.status(201).json({
+//       message: "Application submitted successfully",
+//       application: application
+//     });
+
+//   } catch (err) {
+//     console.error("Application error:", err);
+//     res.status(500).json({ message: "Server error during application submission", error: err.message });
+//   }
+// };
 
 exports.getApplicationsForJob = async (req, res) => {
   try {
@@ -403,5 +472,5 @@ exports.withdrawApplication = async (req, res) => {
   }
   //////debugging bs
   // Add this at the very end of applicationController.js
-  console.log("All exports:", Object.keys(exports));
+  //console.log("All exports:", Object.keys(exports));
 };

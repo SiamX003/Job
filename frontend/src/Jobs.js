@@ -56,23 +56,47 @@ const ApplyJobModal = ({ job, isOpen, onClose, onSuccess }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal" style={{ display: 'block' }}>
-      <div className="modal-content" style={{ maxWidth: '600px', margin: '5% auto' }}>
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 9999
+    }}>
+      <div style={{ 
+        backgroundColor: 'white',
+        maxWidth: '600px', 
+        width: '90%',
+        margin: '5% auto',
+        padding: '2rem',
+        borderRadius: '8px',
+        maxHeight: '80vh',
+        overflow: 'auto'
+      }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <h2 style={{ margin: 0 }}>Apply for {job.title}</h2>
-          <span className="close" onClick={onClose} style={{ fontSize: '2rem', cursor: 'pointer' }}>
-            &times;
+          <span onClick={onClose} style={{ 
+            fontSize: '2rem', 
+            cursor: 'pointer',
+            color: '#666',
+            fontWeight: 'bold'
+          }}>
+            ×
           </span>
         </div>
 
         <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
           <h4 style={{ margin: '0 0 0.5rem 0' }}>{job.company}</h4>
           <p style={{ margin: '0 0 0.5rem 0', color: '#666' }}>
-            <i className="bx bx-map"></i> {job.location || 'Location not specified'}
+            📍 {job.location || 'Location not specified'}
           </p>
           <p style={{ margin: '0', color: '#666' }}>
-            <i className="bx bx-dollar-circle"></i> 
-            {job.salaryMin && job.salaryMax 
+            💰 {job.salaryMin && job.salaryMax 
               ? `$${job.salaryMin.toLocaleString()} - $${job.salaryMax.toLocaleString()}`
               : 'Salary not specified'
             }
@@ -112,12 +136,6 @@ const ApplyJobModal = ({ job, isOpen, onClose, onSuccess }) => {
                 fontSize: '1rem'
               }}
             />
-            <small style={{ color: '#666', fontSize: '0.85rem' }}>
-              {user?.resumeLink 
-                ? 'Leave empty to use your default resume link from profile'
-                : 'Provide a link to your resume (Google Drive, Dropbox, etc.)'
-              }
-            </small>
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
@@ -166,8 +184,15 @@ const ApplyJobModal = ({ job, isOpen, onClose, onSuccess }) => {
             <button
               type="submit"
               disabled={loading}
-              id="w-btn"
-              style={{ fontSize: '1rem' }}
+              style={{
+                padding: '0.75rem 1.5rem',
+                backgroundColor: loading ? '#6c757d' : '#007bff',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                fontSize: '1rem'
+              }}
             >
               {loading ? 'Submitting...' : 'Submit Application'}
             </button>
@@ -177,6 +202,176 @@ const ApplyJobModal = ({ job, isOpen, onClose, onSuccess }) => {
     </div>
   );
 };
+// const ApplyJobModal = ({ job, isOpen, onClose, onSuccess }) => {
+//   const [formData, setFormData] = useState({
+//     resumeLink: '',
+//     coverLetter: ''
+//   });
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState('');
+  
+//   const { user } = useAuth();
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     setError('');
+
+//     try {
+//       const applicationData = {
+//         jobId: job._id,
+//         resumeLink: formData.resumeLink.trim() || undefined,
+//         coverLetter: formData.coverLetter.trim() || undefined
+//       };
+
+//       await API.post('/applications', applicationData);
+      
+//       if (onSuccess) onSuccess();
+//       onClose();
+      
+//       // Reset form
+//       setFormData({ resumeLink: '', coverLetter: '' });
+      
+//       alert('Application submitted successfully!');
+      
+//     } catch (err) {
+//       setError(err.response?.data?.message || 'Failed to submit application');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const handleChange = (e) => {
+//     setFormData({
+//       ...formData,
+//       [e.target.name]: e.target.value
+//     });
+//   };
+
+//   if (!isOpen) return null;
+
+//   return (
+//     <div className="modal" style={{ display: 'block' }}>
+//       <div className="modal-content" style={{ maxWidth: '600px', margin: '5% auto' }}>
+//         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+//           <h2 style={{ margin: 0 }}>Apply for {job.title}</h2>
+//           <span className="close" onClick={onClose} style={{ fontSize: '2rem', cursor: 'pointer' }}>
+//             &times;
+//           </span>
+//         </div>
+
+//         <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+//           <h4 style={{ margin: '0 0 0.5rem 0' }}>{job.company}</h4>
+//           <p style={{ margin: '0 0 0.5rem 0', color: '#666' }}>
+//             <i className="bx bx-map"></i> {job.location || 'Location not specified'}
+//           </p>
+//           <p style={{ margin: '0', color: '#666' }}>
+//             <i className="bx bx-dollar-circle"></i> 
+//             {job.salaryMin && job.salaryMax 
+//               ? `$${job.salaryMin.toLocaleString()} - $${job.salaryMax.toLocaleString()}`
+//               : 'Salary not specified'
+//             }
+//           </p>
+//         </div>
+
+//         {error && (
+//           <div style={{
+//             backgroundColor: '#f8d7da',
+//             color: '#721c24',
+//             padding: '0.75rem',
+//             borderRadius: '4px',
+//             marginBottom: '1rem',
+//             border: '1px solid #f5c6cb'
+//           }}>
+//             {error}
+//           </div>
+//         )}
+
+//         <form onSubmit={handleSubmit}>
+//           <div style={{ marginBottom: '1rem' }}>
+//             <label htmlFor="resumeLink" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+//               Resume Link (Optional)
+//             </label>
+//             <input
+//               type="url"
+//               id="resumeLink"
+//               name="resumeLink"
+//               value={formData.resumeLink}
+//               onChange={handleChange}
+//               placeholder={user?.resumeLink ? `Default: ${user.resumeLink}` : "https://your-resume-link.com"}
+//               style={{
+//                 width: '100%',
+//                 padding: '0.75rem',
+//                 border: '1px solid #ddd',
+//                 borderRadius: '4px',
+//                 fontSize: '1rem'
+//               }}
+//             />
+//             <small style={{ color: '#666', fontSize: '0.85rem' }}>
+//               {user?.resumeLink 
+//                 ? 'Leave empty to use your default resume link from profile'
+//                 : 'Provide a link to your resume (Google Drive, Dropbox, etc.)'
+//               }
+//             </small>
+//           </div>
+
+//           <div style={{ marginBottom: '1.5rem' }}>
+//             <label htmlFor="coverLetter" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+//               Cover Letter (Optional)
+//             </label>
+//             <textarea
+//               id="coverLetter"
+//               name="coverLetter"
+//               value={formData.coverLetter}
+//               onChange={handleChange}
+//               rows={6}
+//               maxLength={2000}
+//               placeholder="Write a brief cover letter explaining why you're interested in this position..."
+//               style={{
+//                 width: '100%',
+//                 padding: '0.75rem',
+//                 border: '1px solid #ddd',
+//                 borderRadius: '4px',
+//                 fontSize: '1rem',
+//                 resize: 'vertical'
+//               }}
+//             />
+//             <small style={{ color: '#666', fontSize: '0.85rem' }}>
+//               {formData.coverLetter.length}/2000 characters
+//             </small>
+//           </div>
+
+//           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+//             <button
+//               type="button"
+//               onClick={onClose}
+//               disabled={loading}
+//               style={{
+//                 padding: '0.75rem 1.5rem',
+//                 border: '1px solid #ddd',
+//                 backgroundColor: 'white',
+//                 color: '#666',
+//                 borderRadius: '4px',
+//                 cursor: loading ? 'not-allowed' : 'pointer',
+//                 fontSize: '1rem'
+//               }}
+//             >
+//               Cancel
+//             </button>
+//             <button
+//               type="submit"
+//               disabled={loading}
+//               id="w-btn"
+//               style={{ fontSize: '1rem' }}
+//             >
+//               {loading ? 'Submitting...' : 'Submit Application'}
+//             </button>
+//           </div>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
 
 // Job Card Component
 const JobCard = ({ job, onApply, showApplyButton }) => {
@@ -341,7 +536,8 @@ const Jobs = () => {
       alert('Only candidates can apply for jobs');
       return;
     }
-
+    //debuging shit
+     console.log("About to set selected job and open modal");
     setSelectedJob(job);
     setIsApplyModalOpen(true);
   };
@@ -378,6 +574,18 @@ const Jobs = () => {
 
     return matchesSearch && matchesLocation && matchesJobType && matchesSalaryMin && matchesSalaryMax;
   });
+  //debugger
+  console.log("Debug auth:", {
+  isAuthenticated: isAuthenticated,
+  user: user,
+  userRole: user?.role
+});
+/////////////////
+//debugger
+console.log("Modal state:", {
+  isApplyModalOpen: isApplyModalOpen,
+  selectedJob: selectedJob
+});
 
   return (
     <div>
@@ -632,129 +840,3 @@ const Jobs = () => {
 
 export default Jobs;
 
-// // Jobs.js
-// import React, { useState, useEffect } from 'react';
-// import API from './api';
-// import { useAuth } from './AuthContext';
-
-// function Jobs() {
-//   const [jobs, setJobs] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-//   const { user } = useAuth();
-
-//   useEffect(() => {
-//     fetchJobs();
-//   }, []);
-
-//   const fetchJobs = async () => {
-//     try {
-//       setLoading(true);
-//       const response = await API.get('/jobs');
-//       setJobs(response.data);
-//       setError(null);
-//     } catch (err) {
-//       setError('Failed to fetch jobs');
-//       console.error('Error fetching jobs:', err);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const deleteJob = async (jobId) => {
-//     if (!window.confirm('Are you sure you want to delete this job?')) {
-//       return;
-//     }
-
-//     try {
-//       await API.delete(`/jobs/${jobId}`);
-//       setJobs(jobs.filter(job => job._id !== jobId));
-//       alert('Job deleted successfully');
-//     } catch (err) {
-//       alert(err.response?.data?.message || 'Failed to delete job');
-//     }
-//   };
-
-//   if (loading) {
-//     return <div style={{ textAlign: 'center', padding: '2rem' }}>Loading jobs...</div>;
-//   }
-
-//   if (error) {
-//     return <div style={{ color: 'red', textAlign: 'center', padding: '2rem' }}>{error}</div>;
-//   }
-
-//   return (
-//     <div>
-//       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-//         <h2>Available Jobs</h2>
-//         <button onClick={fetchJobs} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
-//           Refresh
-//         </button>
-//       </div>
-
-//       {jobs.length === 0 ? (
-//         <p style={{ textAlign: 'center', color: '#666' }}>No jobs available at the moment.</p>
-//       ) : (
-//         <div style={{ display: 'grid', gap: '1rem' }}>
-//           {jobs.map(job => (
-//             <div 
-//               key={job._id} 
-//               style={{ 
-//                 border: '1px solid #ddd', 
-//                 borderRadius: '8px', 
-//                 padding: '1.5rem',
-//                 backgroundColor: '#f9f9f9'
-//               }}
-//             >
-//               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-//                 <div style={{ flex: 1 }}>
-//                   <h3 style={{ margin: '0 0 0.5rem 0', color: '#333' }}>{job.title}</h3>
-//                   <p style={{ margin: '0 0 0.5rem 0', color: '#666', fontWeight: 'bold' }}>
-//                     {job.company} - {job.location}
-//                   </p>
-//                   {job.salary && (
-//                     <p style={{ margin: '0 0 0.5rem 0', color: '#28a745', fontWeight: 'bold' }}>
-//                       {job.salary}
-//                     </p>
-//                   )}
-//                   <p style={{ margin: '0 0 1rem 0', lineHeight: '1.5' }}>{job.description}</p>
-                  
-//                   {job.postedBy && (
-//                     <p style={{ margin: '0', fontSize: '0.9rem', color: '#666' }}>
-//                       Posted by: {job.postedBy.name} ({job.postedBy.email})
-//                     </p>
-//                   )}
-                  
-//                   <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: '#999' }}>
-//                     Posted on: {new Date(job.createdAt || job.updatedAt).toLocaleDateString()}
-//                   </p>
-//                 </div>
-
-//                 {user?.role === 'recruiter' && user?.id === job.postedBy?._id && (
-//                   <div style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
-//                     <button
-//                       onClick={() => deleteJob(job._id)}
-//                       style={{
-//                         padding: '0.5rem 1rem',
-//                         backgroundColor: '#dc3545',
-//                         color: 'white',
-//                         border: 'none',
-//                         borderRadius: '4px',
-//                         cursor: 'pointer',
-//                         fontSize: '0.9rem'
-//                       }}
-//                     >
-//                       Delete
-//                     </button>
-//                   </div>
-//                 )}
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default Jobs;
