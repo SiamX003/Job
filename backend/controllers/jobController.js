@@ -56,3 +56,12 @@ exports.deleteJob = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// MODIFIED / ADDED: new function for recruiter to get their own jobs
+exports.getRecruiterJobs = async (req, res) => {  // <<< ADDED
+  try {
+    const jobs = await Job.find({ postedBy: req.user.id }).populate("postedBy", "name email");
+    res.json(jobs);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};

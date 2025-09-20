@@ -251,38 +251,34 @@ exports.apply = async (req, res) => {
 //     res.status(500).json({ message: "Server error during application submission", error: err.message });
 //   }
 // };
-
 exports.getApplicationsForJob = async (req, res) => {
   try {
     const { jobId } = req.params;
     const recruiterId = req.user.id;
 
-    // Validate recruiter role
     if (req.user.role !== 'recruiter') {
       return res.status(403).json({ message: "Only recruiters can view job applications" });
     }
 
-    // Validate jobId
     const jobIdValidation = validateObjectId(jobId, "Job ID");
     if (!jobIdValidation.isValid) {
       return res.status(400).json({ message: jobIdValidation.message });
     }
 
-    // Check if job exists and belongs to this recruiter
     const job = await Job.findById(jobId);
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
     }
 
-    if (job.recruiterId.toString() !== recruiterId) {
+    // Correct field name
+    if (job.postedBy.toString() !== recruiterId) {
       return res.status(403).json({ message: "You can only view applications for your own job postings" });
     }
 
-    // Get applications with candidate details
     const applications = await Application.find({ jobId: jobId })
       .populate("candidateId", "name email resumeLink")
       .populate("jobId", "title company")
-      .sort({ createdAt: -1 }); // Most recent first
+      .sort({ createdAt: -1 });
 
     res.json({
       message: "Applications retrieved successfully",
@@ -296,6 +292,52 @@ exports.getApplicationsForJob = async (req, res) => {
     res.status(500).json({ message: "Server error while retrieving applications" });
   }
 };
+
+////////////modified because not getting applications as recruiter
+// exports.getApplicationsForJob = async (req, res) => {
+//   try {
+//     const { jobId } = req.params;
+//     const recruiterId = req.user.id;
+
+//     // Validate recruiter role
+//     if (req.user.role !== 'recruiter') {
+//       return res.status(403).json({ message: "Only recruiters can view job applications" });
+//     }
+
+//     // Validate jobId
+//     const jobIdValidation = validateObjectId(jobId, "Job ID");
+//     if (!jobIdValidation.isValid) {
+//       return res.status(400).json({ message: jobIdValidation.message });
+//     }
+
+//     // Check if job exists and belongs to this recruiter
+//     const job = await Job.findById(jobId);
+//     if (!job) {
+//       return res.status(404).json({ message: "Job not found" });
+//     }
+
+//     if (job.recruiterId.toString() !== recruiterId) {
+//       return res.status(403).json({ message: "You can only view applications for your own job postings" });
+//     }
+
+//     // Get applications with candidate details
+//     const applications = await Application.find({ jobId: jobId })
+//       .populate("candidateId", "name email resumeLink")
+//       .populate("jobId", "title company")
+//       .sort({ createdAt: -1 }); // Most recent first
+
+//     res.json({
+//       message: "Applications retrieved successfully",
+//       jobTitle: job.title,
+//       totalApplications: applications.length,
+//       applications: applications
+//     });
+
+//   } catch (err) {
+//     console.error("Get applications error:", err);
+//     res.status(500).json({ message: "Server error while retrieving applications" });
+//   }
+// };
 
 exports.getApplicationsForUser = async (req, res) => {
   try {
@@ -384,9 +426,14 @@ exports.updateApplicationStatus = async (req, res) => {
       return res.status(404).json({ message: "Application not found" });
     }
 
-    if (application.jobId.recruiterId.toString() !== recruiterId) {
+    //  Updated line: check against postedBy instead of recruiterId
+    if (application.jobId.postedBy.toString() !== recruiterId) {
       return res.status(403).json({ message: "You can only update applications for your own job postings" });
     }
+
+    // if (application.jobId.recruiterId.toString() !== recruiterId) {
+    //   return res.status(403).json({ message: "You can only update applications for your own job postings" });
+    // }
 
     // Validate notes if provided
     let cleanNotes = undefined;

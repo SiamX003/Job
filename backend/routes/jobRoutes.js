@@ -4,17 +4,20 @@ const jobController = require("../controllers/jobController");
 const auth = require("../middleware/auth");
 const { permit } = require("../middleware/roles");
 //debug logs
-console.log("jobController:", jobController);
-console.log("auth:", auth);
-console.log("permit:", permit)
+// console.log("jobController:", jobController);
+// console.log("auth:", auth);
+// console.log("permit:", permit)
 // public
 router.get("/", jobController.getJobs);
 router.get("/:id", jobController.getJob);
-
+// MODIFIED / ADDED: route for recruiter to see their own posted jobs
+router.get('/recruiter/my-jobs', auth, permit('recruiter'), jobController.getRecruiterJobs); // <<< ADDED
 // protected - recruiters only for create/update/delete
 router.post("/", auth, permit("recruiter"), jobController.createJob);
 router.put("/:id", auth, permit("recruiter"), jobController.updateJob);
 router.delete("/:id", auth, permit("recruiter"), jobController.deleteJob);
+
+
 
 module.exports = router;
 
