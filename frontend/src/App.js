@@ -20,7 +20,8 @@
 // import Profile from "./Profile";
 
 // import MyApplications from "./MyApplications";
-import React, { useState, useEffect } from 'react'; 
+//console.log({ Home, Jobs, Register, Login, Contact, Profile, MyApplications, AdminDashboard });
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
@@ -34,6 +35,10 @@ import Home from './home';  // check filename case!
 import Contact from './Contact';
 import Profile from "./Profile";
 import MyApplications from "./MyApplications";
+import AdminDashboard from './AdminDashboard';
+
+//debub
+console.log({ Home, Jobs, Register, Login, Contact, Profile, MyApplications, AdminDashboard });
 
 
 
@@ -42,7 +47,7 @@ const JobApplications = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   const { jobId } = useParams();
   const { user } = useAuth();
 
@@ -85,7 +90,7 @@ const JobApplications = () => {
   };
 
   if (loading) return <div style={{ textAlign: 'center', padding: '2rem' }}>Loading applications...</div>;
-  
+
   if (error) {
     return (
       <div style={{ textAlign: 'center', padding: '2rem' }}>
@@ -111,7 +116,7 @@ const JobApplications = () => {
           <p style={{ marginBottom: '2rem', color: '#666' }}>
             {applications.length} application{applications.length !== 1 ? 's' : ''} received
           </p>
-          
+
           <div style={{ display: 'grid', gap: '1.5rem' }}>
             {applications.map((application) => (
               <div
@@ -160,9 +165,9 @@ const JobApplications = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                   <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                     {(application.resumeLink || application.candidateId?.resumeLink) && (
-                      <a 
-                        href={application.resumeLink || application.candidateId?.resumeLink} 
-                        target="_blank" 
+                      <a
+                        href={application.resumeLink || application.candidateId?.resumeLink}
+                        target="_blank"
                         rel="noopener noreferrer"
                         style={{
                           color: '#007bff',
@@ -177,7 +182,7 @@ const JobApplications = () => {
                       </a>
                     )}
                   </div>
-                  
+
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     {application.status !== 'accepted' && application.status !== 'rejected' && (
                       <>
@@ -266,6 +271,15 @@ const Navigation = () => {
           {user?.role === 'recruiter' && (
             <Link to="/create-job" style={{ marginRight: '1rem' }}>Create Job</Link>
           )}
+          {/* {user?.role === 'admin' && (
+            <Link to="/admin" style={{ marginRight: '1rem' }}>Admin Dashboard</Link>
+          )} */}
+          {console.log("User role check:", user?.role === 'admin')}
+          {user?.role === 'admin' && (
+            <Link to="/admin" style={{ marginRight: '1rem' }}>Admin Dashboard</Link>
+          )}
+
+
           <button
             onClick={logout}
             style={{
@@ -303,6 +317,7 @@ function App() {
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/my-applications" element={<MyApplications />} />
             <Route path="/applications/job/:jobId" element={<JobApplications />} />
+            <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </div>
       </Router>
