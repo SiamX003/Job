@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
+import { useLocation } from "react-router-dom";
 import API, { applicationAPI } from "./api";
 import "boxicons/css/boxicons.min.css";
 
@@ -139,7 +140,7 @@ const ApplyJobModal = ({ job, isOpen, onClose, onSuccess }) => {
 };
 
 // JobCard component
-const JobCard = ({ job, onApply, showApplyButton, recruiterView, onViewApplications }) => {
+const JobCard = ({ job, onApply, showApplyButton, recruiterView, onViewApplications, isHighlighted }) => {
   const formatSalary = (min, max) => {
     if (min && max) return `$${min.toLocaleString()} - $${max.toLocaleString()}`;
     if (min) return `From $${min.toLocaleString()}`;
@@ -160,10 +161,31 @@ const JobCard = ({ job, onApply, showApplyButton, recruiterView, onViewApplicati
 
   return (
     <div style={{
-      border: '1px solid #e0e0e0', borderRadius: '8px', padding: '1.5rem',
-      backgroundColor: 'white', margin: '1rem 0', transition: 'all 0.2s ease',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+      border: isHighlighted ? '2px solid #007bff' : '1px solid #e0e0e0', 
+      borderRadius: '8px', 
+      padding: '1.5rem',
+      backgroundColor: isHighlighted ? '#f8f9ff' : 'white', 
+      margin: '1rem 0', 
+      transition: 'all 0.2s ease',
+      boxShadow: isHighlighted ? '0 4px 12px rgba(0,123,255,0.2)' : '0 2px 4px rgba(0,0,0,0.1)',
+      position: 'relative'
     }}>
+      {isHighlighted && (
+        <div style={{
+          position: 'absolute',
+          top: '-10px',
+          left: '20px',
+          backgroundColor: '#007bff',
+          color: 'white',
+          padding: '0.25rem 0.75rem',
+          borderRadius: '12px',
+          fontSize: '0.75rem',
+          fontWeight: '600'
+        }}>
+          Featured Job
+        </div>
+      )}
+
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
         <div>
           <h3 style={{ margin: '0 0 0.5rem 0', color: '#333', fontSize: '1.25rem' }}>
@@ -232,35 +254,446 @@ const Jobs = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedJob, setSelectedJob] = useState(null);
+  const [highlightedJobId, setHighlightedJobId] = useState(null);
 
   const { user, isAuthenticated } = useAuth();
+  const location = useLocation();
   const recruiterView = isAuthenticated && user?.role === 'recruiter';
+  // for recruiter
+  useEffect(() => {
+  fetchJobs();
+}, [user, location.pathname]); // Add location.pathname as dependency
+  useEffect(() => {
+    if (location.state?.selectedJobId) {
+      setHighlightedJobId(location.state.selectedJobId);
+    }
+    if (location.state?.searchQuery) {
+      setSearchQuery(location.state.searchQuery);
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    if (highlightedJobId && jobs.length > 0) {
+      setTimeout(() => {
+        const jobElement = document.querySelector(`[data-job-id="${highlightedJobId}"]`);
+        if (jobElement) {
+          jobElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
+  }, [highlightedJobId, jobs]);
 
   useEffect(() => {
     fetchJobs();
   }, [user]);
-  const fetchJobs = async () => {
-  try {
-    setLoading(true);
-    let response;
 
-    if (user?.role === 'recruiter') {
-      // Fetch only jobs posted by this recruiter
-      response = await API.get('/jobs/recruiter/my-jobs');
-    } else {
-      // Candidate or guest sees all jobs
-      response = await API.get('/jobs');
+  const fetchJobs = async () => {
+    try {
+      setLoading(true);
+      let response;
+
+      if (user?.role === 'recruiter') {
+        response = await API.get('/jobs/recruiter/my-jobs');
+      } else {
+        response = await API.get('/jobs');
+      }
+
+      setJobs(response.data.jobs || response.data);
+      setError('');
+    } catch (err) {
+      setError('Failed to fetch jobs');
+      console.error('Error fetching jobs:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleApply = (job) => {
+    if (!isAuthenticated) {
+      alert('Please login to apply for jobs');
+      return;
+    }
+    
+    if (user?.role !== 'candidate') {
+      alert('Only candidates can apply for jobs');
+      return;
     }
 
-    setJobs(response.data.jobs || response.data);
-    setError('');
-  } catch (err) {
-    setError('Failed to fetch jobs');
-    console.error('Error fetching jobs:', err);
-  } finally {
-    setLoading(false);
-  }
+    setSelectedJob(job);
+    setIsApplyModalOpen(true);
+  };
+
+  const handleViewApplications = (job) => {
+    window.location.href = `/applications/job/${job._id}`;
+  };
+
+  const handleApplicationSuccess = () => {
+    console.log('Application submitted successfully');
+  };
+
+  const filteredJobs = jobs.filter(job => {
+    if (!searchQuery) return true;
+    return job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+           job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
+           (job.location && job.location.toLowerCase().includes(searchQuery.toLowerCase()));
+  });
+
+  return (
+    <div>
+      <header>
+        <div id="navbar" className="obj-width">
+          <a href="/">
+            <img className="logo" src="/images/logo.png" alt="JobHunt" />
+          </a>
+          <ul id="menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/jobs">Browse</a></li>
+            <li><a href="/contact">Contact</a></li>
+            {isAuthenticated ? (
+              <li><a href="/profile">Profile</a></li>
+            ) : (
+              <button id="w-btn">Join</button>
+            )}
+          </ul>
+        </div>
+      </header>
+
+      <section className="jobs sec-space obj-width">
+        <h2>{recruiterView ? 'Your Posted Jobs' : 'Jobs in Demand'}</h2>
+        <p>Most viewed and all time top selling services</p>
+
+        <form onSubmit={(e) => e.preventDefault()}>
+          <i className="bx bx-search-alt-2"></i>
+          <input
+            type="text"
+            placeholder="Search Jobs"
+            id="searchBar"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </form>
+
+        <div className="jobs-container" id="root">
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '2rem' }}>
+              <p>Loading jobs...</p>
+            </div>
+          ) : error ? (
+            <div style={{ textAlign: 'center', padding: '2rem', color: 'red' }}>
+              <p>{error}</p>
+              <button onClick={fetchJobs} id="w-btn">Try Again</button>
+            </div>
+          ) : filteredJobs.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '2rem' }}>
+              <p>No jobs found.</p>
+            </div>
+          ) : (
+            <div>
+              <h3 style={{ marginBottom: '1rem' }}>
+                {filteredJobs.length} Job{filteredJobs.length !== 1 ? 's' : ''} Found
+                {location.state?.selectedJobId && (
+                  <span style={{ marginLeft: '1rem', fontSize: '0.8rem', color: '#666' }}>
+                    (Showing highlighted job from homepage)
+                  </span>
+                )}
+              </h3>
+              {filteredJobs.map(job => (
+                <div key={job._id} data-job-id={job._id}>
+                  <JobCard
+                    job={job}
+                    onApply={handleApply}
+                    showApplyButton={!recruiterView && isAuthenticated && user?.role === 'candidate'}
+                    recruiterView={recruiterView}
+                    onViewApplications={handleViewApplications}
+                    isHighlighted={job._id === highlightedJobId}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {isApplyModalOpen && selectedJob && (
+        <ApplyJobModal
+          job={selectedJob}
+          isOpen={isApplyModalOpen}
+          onClose={() => {
+            setIsApplyModalOpen(false);
+            setSelectedJob(null);
+          }}
+          onSuccess={handleApplicationSuccess}
+        />
+      )}
+    </div>
+  );
 };
+
+export default Jobs;
+
+// import React, { useState, useEffect } from "react";
+// import { useAuth } from "./AuthContext";
+// import API, { applicationAPI } from "./api";
+// import "boxicons/css/boxicons.min.css";
+
+// // Application Modal Component (unchanged)
+// const ApplyJobModal = ({ job, isOpen, onClose, onSuccess }) => {
+//   const [formData, setFormData] = useState({ resumeLink: '', coverLetter: '' });
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState('');
+//   const { user } = useAuth();
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     setError('');
+//     try {
+//       const applicationData = {
+//         jobId: job._id,
+//         resumeLink: formData.resumeLink.trim() || undefined,
+//         coverLetter: formData.coverLetter.trim() || undefined
+//       };
+//       await API.post('/applications', applicationData);
+//       if (onSuccess) onSuccess();
+//       onClose();
+//       setFormData({ resumeLink: '', coverLetter: '' });
+//       alert('Application submitted successfully!');
+//     } catch (err) {
+//       setError(err.response?.data?.message || 'Failed to submit application');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const handleChange = (e) => {
+//     setFormData({ ...formData, [e.target.name]: e.target.value });
+//   };
+
+//   if (!isOpen) return null;
+
+//   return (
+//     <div style={{
+//       position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+//       backgroundColor: 'rgba(0,0,0,0.8)', display: 'flex',
+//       alignItems: 'center', justifyContent: 'center', zIndex: 9999
+//     }}>
+//       <div style={{ backgroundColor: 'white', maxWidth: '600px', width: '90%',
+//         margin: '5% auto', padding: '2rem', borderRadius: '8px', maxHeight: '80vh',
+//         overflow: 'auto'
+//       }}>
+//         <div style={{ display: 'flex', justifyContent: 'space-between',
+//           alignItems: 'center', marginBottom: '1.5rem'
+//         }}>
+//           <h2 style={{ margin: 0 }}>Apply for {job.title}</h2>
+//           <span onClick={onClose} style={{ fontSize: '2rem', cursor: 'pointer',
+//             color: '#666', fontWeight: 'bold'
+//           }}>×</span>
+//         </div>
+
+//         <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+//           <h4 style={{ margin: '0 0 0.5rem 0' }}>{job.company}</h4>
+//           <p style={{ margin: '0 0 0.5rem 0', color: '#666' }}>📍 {job.location || 'Location not specified'}</p>
+//           <p style={{ margin: '0', color: '#666' }}>
+//             💰 {job.salaryMin && job.salaryMax
+//               ? `$${job.salaryMin.toLocaleString()} - $${job.salaryMax.toLocaleString()}`
+//               : 'Salary not specified'}
+//           </p>
+//         </div>
+
+//         {error && (
+//           <div style={{
+//             backgroundColor: '#f8d7da', color: '#721c24', padding: '0.75rem',
+//             borderRadius: '4px', marginBottom: '1rem', border: '1px solid #f5c6cb'
+//           }}>
+//             {error}
+//           </div>
+//         )}
+
+//         <form onSubmit={handleSubmit}>
+//           <div style={{ marginBottom: '1rem' }}>
+//             <label htmlFor="resumeLink" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+//               Resume Link (Optional)
+//             </label>
+//             <input
+//               type="url"
+//               id="resumeLink"
+//               name="resumeLink"
+//               value={formData.resumeLink}
+//               onChange={handleChange}
+//               placeholder={user?.resumeLink ? `Default: ${user.resumeLink}` : "https://your-resume-link.com"}
+//               style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '4px', fontSize: '1rem' }}
+//             />
+//           </div>
+
+//           <div style={{ marginBottom: '1.5rem' }}>
+//             <label htmlFor="coverLetter" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+//               Cover Letter (Optional)
+//             </label>
+//             <textarea
+//               id="coverLetter"
+//               name="coverLetter"
+//               value={formData.coverLetter}
+//               onChange={handleChange}
+//               rows={6}
+//               maxLength={2000}
+//               placeholder="Write a brief cover letter explaining why you're interested in this position..."
+//               style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '4px', fontSize: '1rem', resize: 'vertical' }}
+//             />
+//             <small style={{ color: '#666', fontSize: '0.85rem' }}>
+//               {formData.coverLetter.length}/2000 characters
+//             </small>
+//           </div>
+
+//           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+//             <button
+//               type="button"
+//               onClick={onClose}
+//               disabled={loading}
+//               style={{ padding: '0.75rem 1.5rem', border: '1px solid #ddd', backgroundColor: 'white',
+//                 color: '#666', borderRadius: '4px', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '1rem'
+//               }}
+//             >
+//               Cancel
+//             </button>
+//             <button
+//               type="submit"
+//               disabled={loading}
+//               style={{ padding: '0.75rem 1.5rem', backgroundColor: loading ? '#6c757d' : '#007bff',
+//                 color: 'white', border: 'none', borderRadius: '4px', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '1rem'
+//               }}
+//             >
+//               {loading ? 'Submitting...' : 'Submit Application'}
+//             </button>
+//           </div>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// // JobCard component
+// const JobCard = ({ job, onApply, showApplyButton, recruiterView, onViewApplications }) => {
+//   const formatSalary = (min, max) => {
+//     if (min && max) return `$${min.toLocaleString()} - $${max.toLocaleString()}`;
+//     if (min) return `From $${min.toLocaleString()}`;
+//     if (max) return `Up to $${max.toLocaleString()}`;
+//     return 'Salary not specified';
+//   };
+
+//   const getTimeAgo = (date) => {
+//     const now = new Date();
+//     const posted = new Date(date);
+//     const diffInHours = Math.floor((now - posted) / (1000 * 60 * 60));
+//     if (diffInHours < 24) return `${diffInHours}h ago`;
+//     const diffInDays = Math.floor(diffInHours / 24);
+//     if (diffInDays < 7) return `${diffInDays}d ago`;
+//     const diffInWeeks = Math.floor(diffInDays / 7);
+//     return `${diffInWeeks}w ago`;
+//   };
+
+//   return (
+//     <div style={{
+//       border: '1px solid #e0e0e0', borderRadius: '8px', padding: '1.5rem',
+//       backgroundColor: 'white', margin: '1rem 0', transition: 'all 0.2s ease',
+//       boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+//     }}>
+//       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+//         <div>
+//           <h3 style={{ margin: '0 0 0.5rem 0', color: '#333', fontSize: '1.25rem' }}>
+//             {job.title}
+//           </h3>
+//           <p style={{ margin: '0', color: '#666', fontSize: '1rem', fontWeight: '500' }}>
+//             {job.company}
+//           </p>
+//         </div>
+//         <span style={{
+//           backgroundColor: job.jobType === 'full-time' ? '#28a745' : job.jobType === 'part-time' ? '#ffc107' : '#17a2b8',
+//           color: 'white', padding: '0.25rem 0.5rem', borderRadius: '12px', fontSize: '0.75rem',
+//           fontWeight: '600', textTransform: 'uppercase'
+//         }}>
+//           {job.jobType?.replace('-', ' ') || 'Not specified'}
+//         </span>
+//       </div>
+
+//       <div style={{ marginBottom: '1rem' }}>
+//         <p style={{ margin: '0 0 0.5rem 0', color: '#555', display: 'flex', alignItems: 'center' }}>
+//           <i className="bx bx-map" style={{ marginRight: '0.5rem', color: '#666' }}></i>
+//           {job.location || 'Location not specified'}
+//         </p>
+//         <p style={{ margin: '0 0 0.5rem 0', color: '#555', display: 'flex', alignItems: 'center' }}>
+//           <i className="bx bx-dollar-circle" style={{ marginRight: '0.5rem', color: '#666' }}></i>
+//           {formatSalary(job.salaryMin, job.salaryMax)}
+//         </p>
+//       </div>
+
+//       {job.description && (
+//         <p style={{
+//           margin: '0 0 1rem 0', color: '#666', fontSize: '0.9rem',
+//           display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
+//           overflow: 'hidden'
+//         }}>
+//           {job.description}
+//         </p>
+//       )}
+
+//       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
+//         <span style={{ fontSize: '0.85rem', color: '#888' }}>
+//           Posted {getTimeAgo(job.createdAt)}
+//         </span>
+
+//         {showApplyButton && (
+//           <button onClick={() => onApply(job)} id="w-btn">
+//             Apply Now
+//           </button>
+//         )}
+
+//         {recruiterView && (
+//           <button onClick={() => onViewApplications(job)} id="w-btn">
+//             View Applications
+//           </button>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// // Jobs Component
+// const Jobs = () => {
+//   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [jobs, setJobs] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState('');
+//   const [selectedJob, setSelectedJob] = useState(null);
+
+//   const { user, isAuthenticated } = useAuth();
+//   const recruiterView = isAuthenticated && user?.role === 'recruiter';
+
+//   useEffect(() => {
+//     fetchJobs();
+//   }, [user]);
+//   const fetchJobs = async () => {
+//   try {
+//     setLoading(true);
+//     let response;
+
+//     if (user?.role === 'recruiter') {
+//       // Fetch only jobs posted by this recruiter
+//       response = await API.get('/jobs/recruiter/my-jobs');
+//     } else {
+//       // Candidate or guest sees all jobs
+//       response = await API.get('/jobs');
+//     }
+
+//     setJobs(response.data.jobs || response.data);
+//     setError('');
+//   } catch (err) {
+//     setError('Failed to fetch jobs');
+//     console.error('Error fetching jobs:', err);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
 
 
   // const fetchJobs = async () => {
@@ -282,76 +715,76 @@ const Jobs = () => {
   //   }
   // };
 
-  const handleApply = (job) => {
-    if (!isAuthenticated) {
-      alert('Please login to apply for jobs');
-      return;
-    }
-    if (user?.role !== 'candidate') {
-      alert('Only candidates can apply for jobs');
-      return;
-    }
-    setSelectedJob(job);
-    setIsApplyModalOpen(true);
-  };
+//   const handleApply = (job) => {
+//     if (!isAuthenticated) {
+//       alert('Please login to apply for jobs');
+//       return;
+//     }
+//     if (user?.role !== 'candidate') {
+//       alert('Only candidates can apply for jobs');
+//       return;
+//     }
+//     setSelectedJob(job);
+//     setIsApplyModalOpen(true);
+//   };
 
-  const handleViewApplications = (job) => {
-    // redirect to a page showing applications for this job
-    window.location.href = `/applications/job/${job._id}`;
-  };
+//   const handleViewApplications = (job) => {
+//     // redirect to a page showing applications for this job
+//     window.location.href = `/applications/job/${job._id}`;
+//   };
 
-  const handleApplicationSuccess = () => {
-    console.log('Application submitted successfully');
-  };
+//   const handleApplicationSuccess = () => {
+//     console.log('Application submitted successfully');
+//   };
 
-  return (
-    <div>
-      {/* Jobs Section */}
-      <section className="jobs sec-space obj-width">
-        <h2>{recruiterView ? 'Your Job Postings' : 'Jobs in Demand'}</h2>
+//   return (
+//     <div>
+//       {/* Jobs Section */}
+//       <section className="jobs sec-space obj-width">
+//         <h2>{recruiterView ? 'Your Job Postings' : 'Jobs in Demand'}</h2>
 
-        {/* Job Results */}
-        <div className="jobs-container" id="root">
-          {loading ? (
-            <div style={{ textAlign: 'center', padding: '2rem' }}><p>Loading jobs...</p></div>
-          ) : error ? (
-            <div style={{ textAlign: 'center', padding: '2rem', color: 'red' }}>
-              <p>{error}</p>
-              <button onClick={fetchJobs} id="w-btn">Try Again</button>
-            </div>
-          ) : jobs.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '2rem' }}>
-              <p>No jobs found.</p>
-            </div>
-          ) : (
-            jobs.map(job => (
-              <JobCard
-                key={job._id}
-                job={job}
-                onApply={handleApply}
-                showApplyButton={!recruiterView}
-                recruiterView={recruiterView}
-                onViewApplications={handleViewApplications}
-              />
-            ))
-          )}
-        </div>
-      </section>
+//         {/* Job Results */}
+//         <div className="jobs-container" id="root">
+//           {loading ? (
+//             <div style={{ textAlign: 'center', padding: '2rem' }}><p>Loading jobs...</p></div>
+//           ) : error ? (
+//             <div style={{ textAlign: 'center', padding: '2rem', color: 'red' }}>
+//               <p>{error}</p>
+//               <button onClick={fetchJobs} id="w-btn">Try Again</button>
+//             </div>
+//           ) : jobs.length === 0 ? (
+//             <div style={{ textAlign: 'center', padding: '2rem' }}>
+//               <p>No jobs found.</p>
+//             </div>
+//           ) : (
+//             jobs.map(job => (
+//               <JobCard
+//                 key={job._id}
+//                 job={job}
+//                 onApply={handleApply}
+//                 showApplyButton={!recruiterView}
+//                 recruiterView={recruiterView}
+//                 onViewApplications={handleViewApplications}
+//               />
+//             ))
+//           )}
+//         </div>
+//       </section>
 
-      {/* Apply Job Modal */}
-      {isApplyModalOpen && selectedJob && (
-        <ApplyJobModal
-          job={selectedJob}
-          isOpen={isApplyModalOpen}
-          onClose={() => { setIsApplyModalOpen(false); setSelectedJob(null); }}
-          onSuccess={handleApplicationSuccess}
-        />
-      )}
-    </div>
-  );
-};
+//       {/* Apply Job Modal */}
+//       {isApplyModalOpen && selectedJob && (
+//         <ApplyJobModal
+//           job={selectedJob}
+//           isOpen={isApplyModalOpen}
+//           onClose={() => { setIsApplyModalOpen(false); setSelectedJob(null); }}
+//           onSuccess={handleApplicationSuccess}
+//         />
+//       )}
+//     </div>
+//   );
+// };
 
-export default Jobs;
+// export default Jobs;
 
 // // Jobs.js - Enhanced version of your existing Jobs page
 // import React, { useState, useEffect } from "react";
