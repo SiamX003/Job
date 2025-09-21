@@ -280,3 +280,259 @@ const Home = () => {
 };
 
 export default Home;
+// import React, { useEffect, useState } from "react";
+// import "./home.css";
+
+// import logo from "./images/logo.png";
+// import heroImg from "./images/hero1.PNG";
+// import fe1 from "./images/fe 1.png";
+// import fe2 from "./images/fe 2.png";
+// import fe3 from "./images/fe 3.png";
+// import fe4 from "./images/fe 4.png";
+
+// import t1 from "./images/t1.png";
+// import t2 from "./images/t2.png";
+// import t3 from "./images/t3.png";
+// import t4 from "./images/t4.png";
+// import t5 from "./images/t5.png";
+// import t6 from "./images/t6.png";
+
+// const Home = () => {
+//   const [latestJobs, setLatestJobs] = useState([]);
+//   const role = localStorage.getItem("role"); // 'recruiter' or 'candidate'
+
+//   useEffect(() => {
+//     fetch("/api/jobs?limit=10")
+//       .then((res) => res.json())
+//       .then((data) => setLatestJobs(data))
+//       .catch((err) => console.error("Failed to fetch jobs:", err));
+//   }, []);
+
+//   // Top categories (hardcoded for now)
+//   const categories = [
+//     "Web Development", "Graphic Design", "Content Writing",
+//     "Digital Marketing", "Mobile App Development", "Data Science"
+//   ];
+
+//   return (
+//     <div>
+//       {/* Navbar */}
+//       <header>
+//         <div id="navbar" className="obj-width">
+//           <a href="/">
+//             <img className="logo" src={logo} alt="Logo" />
+//           </a>
+//           <ul id="menu">
+//             <li><a href="/">Home</a></li>
+//             {role === "candidate" && <li><a href="/jobs">Browse Jobs</a></li>}
+//             <li><a href="/contact">Contact</a></li>
+//             {role === "recruiter" ? (
+//               <li><a href="/post-job" className="btn-primary">Post a Job</a></li>
+//             ) : (
+//               <li><button id="w-btn">Join</button></li>
+//             )}
+//           </ul>
+//         </div>
+//       </header>
+
+//       {/* Hero Section */}
+//       <section className="hero">
+//         <div className="hero-overlay">
+//           <div className="hero-box obj-width">
+//             <div className="h-left">
+//               <h1>Find the perfect freelance services for your business</h1>
+//               <p>Work with talented people at the most affordable price to maximize your time and results.</p>
+
+//               <div className="search-bar">
+//                 <input type="text" placeholder="Search jobs or skills..." />
+//                 <a href="/jobs" className="btn-primary">Search</a>
+//               </div>
+
+//               <div className="hero-cta">
+//                 {role === "candidate" && <a href="/jobs" className="btn-primary">Browse Jobs</a>}
+//                 {role === "recruiter" && <a href="/post-job" className="btn-secondary">Post a Job</a>}
+//               </div>
+//             </div>
+
+//             <div className="h-right">
+//               <img src={heroImg} alt="Hero" />
+//             </div>
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Features Section */}
+//       <section className="features sec-space obj-width">
+//         <h2>Need something done?</h2>
+//         <p className="sub-text">Most viewed and top-selling services</p>
+
+//         <div className="fe-box">
+//           {role === "recruiter" && (
+//             <div className="feature-card">
+//               <a href="/post-job">
+//                 <img src={fe1} alt="Post a job" />
+//                 <h3>Post a Job</h3>
+//                 <p>Easy and fast job posting for recruiters.</p>
+//               </a>
+//             </div>
+//           )}
+
+//           {role === "candidate" && (
+//             <div className="feature-card">
+//               <a href="/jobs">
+//                 <img src={fe2} alt="Browse Jobs" />
+//                 <h3>Browse Jobs</h3>
+//                 <p>Find top jobs and opportunities in your field.</p>
+//               </a>
+//             </div>
+//           )}
+
+//           <div className="feature-card">
+//             <a href="/contact">
+//               <img src={fe3} alt="Get Support" />
+//               <h3>Get Support</h3>
+//               <p>Help and guidance for any issues or questions.</p>
+//             </a>
+//           </div>
+
+//           <div className="feature-card">
+//             <a href="/contact">
+//               <img src={fe4} alt="Contact Us" />
+//               <h3>Contact Us</h3>
+//               <p>Reach out for inquiries or assistance anytime.</p>
+//             </a>
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Latest Jobs Section */}
+//       <section className="jobs-preview sec-space obj-width">
+//         <h2>Latest Jobs</h2>
+//         <p>Check out the newest opportunities</p>
+
+//         <div className="jobs-carousel">
+//           {latestJobs.length > 0 ? latestJobs.map((job) => (
+//             <div key={job._id || job.id} className="job-card">
+//               {job.img && <img src={job.img} alt={job.title} />}
+//               <h3>{job.title}</h3>
+//               <p>{job.salary}</p>
+//               <span className="job-type">{job.jobType}</span>
+//             </div>
+//           )) : (
+//             <p>No jobs found.</p>
+//           )}
+//         </div>
+
+//         <div className="view-all">
+//           <a href="/jobs" className="btn-primary">View All Jobs</a>
+//         </div>
+//       </section>
+
+//       {/* Top Categories */}
+//       <section className="categories sec-space obj-width">
+//         <h2>Top Categories</h2>
+//         <div className="category-grid">
+//           {categories.map((cat, idx) => (
+//             <a key={idx} href={`/jobs?category=${cat}`} className="category-card">
+//               {cat}
+//             </a>
+//           ))}
+//         </div>
+//       </section>
+
+//       {/* Mid-page CTA Banner */}
+//       <section className="cta-banner sec-space">
+//         <div className="obj-width cta-box">
+//           {role === "recruiter" ? (
+//             <>
+//               <h2>Hire Top Talent Today!</h2>
+//               <p>Post a job now and reach thousands of skilled freelancers.</p>
+//               <a href="/post-job" className="btn-primary">Post a Job</a>
+//             </>
+//           ) : (
+//             <>
+//               <h2>Looking for Opportunities?</h2>
+//               <p>Browse the latest jobs and start your freelance career today.</p>
+//               <a href="/jobs" className="btn-primary">Browse Jobs</a>
+//             </>
+//           )}
+//         </div>
+//       </section>
+
+//       {/* Trust / Testimonials */}
+//       <section className="trust sec-space obj-width">
+//         <h2>Trusted by the world's best</h2>
+//         <p>Most viewed all time</p>
+//         <div className="t-box">
+//           <img src={t1} alt="Trusted 1" />
+//           <img src={t2} alt="Trusted 2" />
+//           <img src={t3} alt="Trusted 3" />
+//           <img src={t4} alt="Trusted 4" />
+//           <img src={t5} alt="Trusted 5" />
+//           <img src={t6} alt="Trusted 6" />
+//         </div>
+//       </section>
+
+//       {/* Footer */}
+//       <footer className="footer">
+//         <div className="obj-width">
+//           <div className="top">
+//             <img className="logo" src={logo} alt="Logo" />
+//             <div>
+//               <a href="https://www.facebook.com/profile.php?id=61579876076360">
+//                 <i className="bx bxl-facebook-square" />
+//               </a>
+//               <a href="https://x.com/i/lists/1959288678146294126">
+//                 <i className="bx bxl-twitter" />
+//               </a>
+//               <a href="https://www.instagram.com/jobhunter749?igsh=dThtb3ozdzVpZHlv">
+//                 <i className="bx bxl-instagram" />
+//               </a>
+//               <a href="https://www.linkedin.com/in/ahnaf-hossain-3b4b2521b/">
+//                 <i className="bx bxl-linkedin-square" />
+//               </a>
+//             </div>
+//           </div>
+
+//           <div>
+//             <p>JobHunt is a global online platform for freelance services</p>
+//           </div>
+
+//           <div className="bottom">
+//             <div>
+//               <h3>Project</h3>
+//               <a href="#changelog">Change log</a>
+//               <a href="#status">Status</a>
+//               <a href="#license">License</a>
+//               <a href="#versions">All versions</a>
+//             </div>
+//             <div>
+//               <h3>Community</h3>
+//               <a href="https://github.com">Github</a>
+//               <a href="#problems">Your Problems</a>
+//               <a href="https://twitter.com">Twitter</a>
+//               <a href="https://linkedin.com">LinkedIn</a>
+//             </div>
+//             <div>
+//               <h3>Help</h3>
+//               <a href="#support">Support</a>
+//               <a href="#troubleshooting">Troubleshooting</a>
+//               <a href="#contact">Contact us</a>
+//               <a href="#faq">FAQ</a>
+//             </div>
+//             <div>
+//               <h3>Others</h3>
+//               <a href="#terms">Terms and services</a>
+//               <a href="#privacy">Privacy</a>
+//               <a href="#licence">Licence</a>
+//               <a href="#cookies">Cookie policy</a>
+//             </div>
+//           </div>
+//         </div>
+//       </footer>
+//     </div>
+//   );
+// };
+
+// export default Home;
+

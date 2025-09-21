@@ -19,6 +19,31 @@ exports.getJobs = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// exports.createJob = async (req, res) => {
+//   try {
+//     const { title, description, company, location, salary, type } = req.body;
+
+//     // Validate type
+//     if (!["fullTime", "partTime", "freelance"].includes(type)) {
+//       return res.status(400).json({ message: "Invalid job type" });
+//     }
+
+//     const job = new Job({ 
+//       title, 
+//       description, 
+//       company, 
+//       location, 
+//       salary, 
+//       type,          // <<< NEW
+//       postedBy: req.user.id 
+//     });
+
+//     await job.save();
+//     res.status(201).json(job);
+//   } catch (err) {
+//     res.status(500).json({ message: "Server error", error: err.message });
+//   }
+// };
 
 exports.getJob = async (req, res) => {
   try {
@@ -29,6 +54,24 @@ exports.getJob = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// exports.updateJob = async (req, res) => {
+//   try {
+//     const job = await Job.findById(req.params.id);
+//     if (!job) return res.status(404).json({ message: "Job not found" });
+//     if (job.postedBy.toString() !== req.user.id) return res.status(403).json({ message: "Not allowed" });
+
+//     // Validate type if present in update
+//     if (req.body.type && !["fullTime", "partTime", "freelance"].includes(req.body.type)) {
+//       return res.status(400).json({ message: "Invalid job type" });
+//     }
+
+//     Object.assign(job, req.body); // type will be updated if present
+//     await job.save();
+//     res.json(job);
+//   } catch (err) {
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
 
 exports.updateJob = async (req, res) => {
   try {
