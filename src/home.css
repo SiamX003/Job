@@ -376,6 +376,42 @@ footer .bottom a{
   font-weight: 500;
 }
 
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.5);
+  display:none; align-items:center; justify-content:center; z-index:1000;
+}
+.modal-overlay.show{ display:flex; }
+
+.modal{
+  width:90%; max-width:520px; background:#fff; border-radius:16px; overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+.modal-head{
+  background:#1f4a40; color:#fff; display:flex; align-items:center; justify-content:space-between;
+  padding:1rem 1.25rem;
+}
+.close-x{ background:transparent; border:none; color:#fff; font-size:1.6rem; cursor:pointer; }
+.tabs{
+  display:flex; gap:.5rem; background:#e9f5f2; padding:.5rem 1rem; border-bottom:1px solid #dbe7e4;
+}
+.tab-btn{
+  background:transparent; border:none; padding:.6rem 1rem; border-radius:8px; cursor:pointer;
+  color:#1f4a40; font-weight:600; opacity:.7; border-bottom:2px solid transparent;
+}
+.tab-btn.active{ opacity:1; border-color:#1f4a40; }
+.modal-body{ padding:1.25rem; }
+.tab-pane{ display:none; }
+.tab-pane.active{ display:block; }
+.form-group{ margin-bottom:1rem; }
+.form-group label{ display:block; font-size:.95rem; margin-bottom:.35rem; }
+.input{
+  width:100%; padding:.85rem 1rem; border-radius:10px; border:1px solid #ddd; outline:none;
+}
+.input:focus{ border-color:#51a995; box-shadow:0 0 0 3px rgba(81,169,149,.15); }
+.btn{ display:inline-block; border:none; cursor:pointer; }
+.btn.primary{ background:#1f4a40; color:#fff; padding:.85rem 1.2rem; border-radius:10px; }
+.btn.full{ width:100%; }
+
 /* ================= RESPONSIVE ================= */
 @media (max-width: 992px) {
   /* Jobs cards were disabled; nothing to change here for v1 */

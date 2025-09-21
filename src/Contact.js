@@ -1,31 +1,46 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './Contact.css';
 
 function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [loading, setLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Thank you for your message! We will get back to you soon.');
-    setFormData({ name: '', email: '', message: '' });
+    setLoading(true);
+    setSuccessMsg('');
+    setErrorMsg('');
+
+    try {
+      const response = await axios.post(
+        'http://localhost:1000/api/contact', // ✅ Correct backend route
+        formData,
+        { withCredentials: true }
+      );
+
+      if (response.data.success) {
+        setSuccessMsg('Thank you for your message! We will get back to you soon.');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        setErrorMsg(response.data.message || 'Something went wrong.');
+      }
+    } catch (error) {
+      setErrorMsg(error.response?.data?.message || 'Server error.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="contact-container">
       <h1>Contact Us</h1>
       <p>Get in touch with us</p>
-      
+
       <div className="contact-info">
         <h2>Our Contact Information</h2>
         <p>Email: support@jobSolutions.com</p>
@@ -35,6 +50,8 @@ function Contact() {
 
       <div className="contact-form">
         <h2>Send us a Message</h2>
+        {successMsg && <p className="success-msg">{successMsg}</p>}
+        {errorMsg && <p className="error-msg">{errorMsg}</p>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <input 
@@ -65,7 +82,9 @@ function Contact() {
               required
             />
           </div>
-          <button type="submit">Send Message</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Sending...' : 'Send Message'}
+          </button>
         </form>
       </div>
     </div>
