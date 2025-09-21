@@ -72,20 +72,20 @@ h3 {
 }
 .btn:active { transform: translateY(1px); }
 
-/* .btn.primary {
+.btn.primary {
   background: #1f4a40;
   color: #fff;
   box-shadow: 0 6px 16px rgba(31,74,64,0.25);
 }
 .btn.primary:hover { background: #1b4037; }
 
-.btn.full { width: 100%; } */
+.btn.full { width: 100%; }
 
 
 /* ================= UTILITIES ================= */
 .sec-space { padding: 4rem 0; }
 .extra-space { padding: 8rem 0; }
-.obj-width { max-width: 1200px; margin: auto; }
+.obj-width { max-width: 1200px; margin: auto; padding: 1.5rem; }
 
 /* ================= HEADER / NAV ================= */
 header { background-color: #1f4a40; }
@@ -127,8 +127,8 @@ header { background-color: #1f4a40; }
 .hero-box {
   display: flex;
   align-items: center;
-  min-height: 80vh;
-  padding-left: 5rem;
+  min-height: 100vh;
+  padding-left: 1.5rem;
   gap: 3rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -144,9 +144,9 @@ header { background-color: #1f4a40; }
 }
 .h-left h1 {
   font-size: clamp(1.2rem, 5vw, 3.5rem);
-  line-height: 1.1;
+  line-height: 1.2;
   margin: 0 0 0.5rem 0;
-  font-weight: 700;
+  font-weight: 600;
 }
 .h-left p {
   font-size: 1.2rem;

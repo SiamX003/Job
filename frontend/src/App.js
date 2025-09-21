@@ -10,6 +10,9 @@ import Login from './Login';
 import Home from './home';
 import Contact from './Contact';
 import Profile from "./Profile";
+import JobDetails from "./jobs/jobDetails"; 
+
+
 
 function App() {
   return (
@@ -24,6 +27,8 @@ function App() {
             <Route path="/create-job" element={<CreateJob />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/jobs" element={<Jobs />} />
+            <Route path="/jobs/:id" element={<JobDetails />} />
+
           </Routes>
         </div>
       </Router>

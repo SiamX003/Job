@@ -1,40 +1,22 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";           // ✅ keep imports at top
-import "./home.css";
-import "./Contact.css";
-import jCategory from "./jobs/job-list";
+import React, { useEffect, useMemo, useState, useRef } from "react";
+import "../home.css";
+import "../Contact.css";
+import { useParams } from "react-router-dom";
+import jCategory from "./job-list"; 
 
-import logo from "./images/logo.png";
-import heroImg from "./images/hero1.PNG";
-
-import fe1 from "./images/fe 1.png";
-import fe2 from "./images/fe 2.png";
-import fe3 from "./images/fe 3.png";
-import fe4 from "./images/fe 4.png";
-
-import t1 from "./images/t1.png";
-import t2 from "./images/t2.png";
-import t3 from "./images/t3.png";
-import t4 from "./images/t4.png";
-import t5 from "./images/t5.png";
-import t6 from "./images/t6.png";
-
-import fl1 from "./images/fl-1.png";
-import fl2 from "./images/fl-2.png";
-import fl3 from "./images/fl-3.png";
-import fl4 from "./images/fl-4.png";
-
+import logo from "../images/logo.png";
 const Home = () => {
   const [activeJobFilter, setActiveJobFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); // ✅ state for search
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [authTab, setAuthTab] = useState("login");
+  const { id } = useParams();
 
   const modalOverlayRef = useRef(null);
   const loginEmailRef = useRef(null);
 
-  // Filter by tab + search
+  // Filtering jobs by tab + search
   const filteredJobs = useMemo(() => {
     const byTab =
       activeJobFilter === "all"
@@ -47,8 +29,7 @@ const Home = () => {
     return byTab.filter(
       (j) =>
         (j.title || "").toLowerCase().includes(q) ||
-        (j.rate || "").toLowerCase().includes(q) ||
-        (j.av || "").toLowerCase().includes(q)
+        (j.salary || "").toLowerCase().includes(q)
     );
   }, [activeJobFilter, searchQuery]);
 
@@ -61,9 +42,7 @@ const Home = () => {
 
   // Autofocus email on login tab
   useEffect(() => {
-    if (modalOpen && authTab === "login") {
-      setTimeout(() => loginEmailRef.current?.focus(), 0);
-    }
+    if (modalOpen && authTab === "login") setTimeout(() => loginEmailRef.current?.focus(), 0);
   }, [modalOpen, authTab]);
 
   const openModal = () => {
@@ -101,169 +80,16 @@ const Home = () => {
           </button>
 
           <ul id="menu" className={menuOpen ? "active" : ""} aria-label="Primary">
+            <li><a href="#browse">Browse</a></li>
             <li><a href="/">Home</a></li>
-             <li><a href="#browse">Browse</a></li>
             <li><a href="/Contact">Contact</a></li>
             <li><button id="w-btn" onClick={openModal}>Join</button></li>
           </ul>
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="hero">
-        <div className="hero-box obj-width">
-          <div className="h-left">
-            <h1>Find the perfect freelance services for your business</h1>
-            <p>
-              Work with talented people at the most affordable price to get the most
-              out of your time and cost.
-            </p>
-            <div className="search">
-              <input
-                type="text"
-                placeholder="Search your job here"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <a href="#search">Search</a>
-            </div>
-          </div>
 
-          <div className="h-right">
-            <img src={heroImg} alt="Hero" />
-          </div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="features sec-space obj-width" id="browse">
-        <h2>Need something done?</h2>
-        <p className="sub-text">Most viewed and all-time top-selling services</p>
-
-        <div className="fe-box">
-          <div>
-            <img src={fe1} alt="Post a job" />
-            <h3>Post a job</h3>
-            <p>It's free and easy to post a job. Simply fill in a title, description.</p>
-          </div>
-          <div>
-            <img src={fe2} alt="Choose freelancers" />
-            <h3>Choose freelancers</h3>
-            <p>It's free and easy to post a job. Simply fill in a title, description.</p>
-          </div>
-          <div>
-            <img src={fe3} alt="Pay safely" />
-            <h3>Pay safely</h3>
-            <p>It's free and easy to post a job. Simply fill in a title, description.</p>
-          </div>
-          <div>
-            <img src={fe4} alt="We are here to help" />
-            <h3>We are here to help</h3>
-            <p>It's free and easy to post a job. Simply fill in a title, description.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Jobs */}
-      <section className="jobs sec-space obj-width extra-space">
-        <h2>Jobs in Demand</h2>
-        <p>Most viewed and all time top selling services</p>
-
-        <form>
-          <i className="bx bx-search-alt-2"></i>
-          <input
-            type="text"
-            id="searchBar"
-            placeholder="Search Jobs"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </form>
-
-        <ul className="job-id">
-          <li className={activeJobFilter === "all" ? "active" : ""} onClick={() => setActiveJobFilter("all")}>Recent Jobs</li>
-          <li className={activeJobFilter === "freelance" ? "active" : ""} onClick={() => setActiveJobFilter("freelance")}>Freelancer</li>
-          <li className={activeJobFilter === "fullTime" ? "active" : ""} onClick={() => setActiveJobFilter("fullTime")}>Full Time</li>
-          <li className={activeJobFilter === "partTime" ? "active" : ""} onClick={() => setActiveJobFilter("partTime")}>Part Time</li>
-        </ul>
-
-        <div className="jobs-container">
-          {filteredJobs.map((job) => (
-            <Link to={`/jobs/${job.index}`} key={job.index} className="jList">
-              <img src={job.image} alt={job.title} />
-              <h3>{job.title}</h3>
-              <p>{job.rate}</p>
-              <span className="job-type">{job.av}</span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Trusted logos */}
-      <section className="trust sec-space obj-width ">
-        <h2>Trusted by the world's best</h2>
-        <p>Most viewed all time</p>
-        <div className="t-box">
-          <img src={t1} alt="Trusted 1" />
-          <img src={t2} alt="Trusted 2" />
-          <img src={t3} alt="Trusted 3" />
-          <img src={t4} alt="Trusted 4" />
-          <img src={t5} alt="Trusted 5" />
-          <img src={t6} alt="Trusted 6" />
-        </div>
-      </section>
-
-      {/* Team */}
-      <section className="highest sec-space obj-width">
-        <h2>Highest Rated Freelancers</h2>
-        <p>Most viewed and all-time top-selling services</p>
-
-        <div className="team-container">
-          <div className="fl-box">
-            <img src={fl1} alt="John Smith" />
-            <h3>John Smith</h3>
-            <div className="skill">
-              <span id="key">HTML</span>
-              <span id="key">CSS</span>
-              <span id="key">JavaScript</span>
-            </div>
-            <button>View Profile</button>
-          </div>
-
-          <div className="fl-box">
-            <img src={fl2} alt="Jane Doe" />
-            <h3>Jane Doe</h3>
-            <div className="skill">
-              <span id="key">HTML</span>
-              <span id="key">CSS</span>
-              <span id="key">JavaScript</span>
-            </div>
-            <button>View Profile</button>
-          </div>
-
-          <div className="fl-box">
-            <img src={fl3} alt="Michael Brown" />
-            <h3>Michael Brown</h3>
-            <div className="skill">
-              <span id="key">HTML</span>
-              <span id="key">CSS</span>
-              <span id="key">JavaScript</span>
-            </div>
-            <button>View Profile</button>
-          </div>
-
-          <div className="fl-box">
-            <img src={fl4} alt="Thesera Ray" />
-            <h3>Thesera Ray</h3>
-            <div className="skill">
-              <span id="key">HTML</span>
-              <span id="key">CSS</span>
-              <span id="key">JavaScript</span>
-            </div>
-            <button>View Profile</button>
-          </div>
-        </div>
-      </section>
+<h1 class="extra-space">This is job details</h1>
 
       {/* Footer */}
       <footer>
