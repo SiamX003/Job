@@ -1,13 +1,22 @@
+// frontend/src/jobs/jobDetails.js
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import "../home.css";
 import "../Contact.css";
 import { useParams } from "react-router-dom";
-import jCategory from "./job-list"; 
+import jCategory from "./job-list";
 
+// Images that exist in src/images (case-sensitive!)
 import logo from "../images/logo.png";
+import googleLogo from "../images/google.png";
+import vacancyImg from "../images/vacancy.png";
+import hourImg from "../images/hour.png";
+import salaryImg from "../images/salary.png";
+// No position.png in your folder — using linkedin.png as the "Position" icon
+import positionImg from "../images/linkedin.png";
+
 const Home = () => {
   const [activeJobFilter, setActiveJobFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState(""); // ✅ state for search
+  const [searchQuery, setSearchQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [authTab, setAuthTab] = useState("login");
@@ -16,7 +25,7 @@ const Home = () => {
   const modalOverlayRef = useRef(null);
   const loginEmailRef = useRef(null);
 
-  // Filtering jobs by tab + search
+  // (kept in case you use it later)
   const filteredJobs = useMemo(() => {
     const byTab =
       activeJobFilter === "all"
@@ -33,16 +42,16 @@ const Home = () => {
     );
   }, [activeJobFilter, searchQuery]);
 
-  // Close modal on ESC
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && setModalOpen(false);
     if (modalOpen) window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [modalOpen]);
 
-  // Autofocus email on login tab
   useEffect(() => {
-    if (modalOpen && authTab === "login") setTimeout(() => loginEmailRef.current?.focus(), 0);
+    if (modalOpen && authTab === "login") {
+      setTimeout(() => loginEmailRef.current?.focus(), 0);
+    }
   }, [modalOpen, authTab]);
 
   const openModal = () => {
@@ -75,11 +84,19 @@ const Home = () => {
             <img className="logo" src={logo} alt="Logo" />
           </a>
 
-          <button id="bar" aria-label="Toggle menu" onClick={() => setMenuOpen((s) => !s)}>
+          <button
+            id="bar"
+            aria-label="Toggle menu"
+            onClick={() => setMenuOpen((s) => !s)}
+          >
             ☰
           </button>
 
-          <ul id="menu" className={menuOpen ? "active" : ""} aria-label="Primary">
+          <ul
+            id="menu"
+            className={menuOpen ? "active" : ""}
+            aria-label="Primary"
+          >
             <li><a href="#browse">Browse</a></li>
             <li><a href="/">Home</a></li>
             <li><a href="/Contact">Contact</a></li>
@@ -88,8 +105,51 @@ const Home = () => {
         </div>
       </header>
 
+      <div id="jobsDetails" className="extra-space obj-width">
+        <div className="job-header">
+          <div className="job-img-row">
+            <img src={googleLogo} alt="Google" />
+          </div>
+          <div>
+            <h2>Google</h2>
+            <span>USA</span>
+          </div>
+          <a id="g-btn" href="#" className="apply-btn">Apply Now</a>
+        </div>
 
-<h1 class="extra-space">This is job details</h1>
+        <section className="features sec-space obj-width" id="browse">
+          <div className="fe-box">
+            <div>
+              <img src={vacancyImg} alt="Vacancy" />
+              <h3>Vacancy</h3>
+              <p>01 Vacancy</p>
+            </div>
+            <div>
+              <img src={hourImg} alt="Job Hours" />
+              <h3>Job Hours</h3>
+              <p>8 hr per day</p>
+            </div>
+            <div>
+              <img src={salaryImg} alt="Salary" />
+              <h3>Salary</h3>
+              <p>$900–$1200</p>
+            </div>
+            <div>
+              <img src={positionImg} alt="Position" />
+              <h3>Position</h3>
+              <p>Web Developer</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="job-description sec-space">
+        <h3>Job Description</h3>
+        <p>
+          We’re seeking a Web Developer to turn Figma designs into pixel-perfect, responsive UIs, integrate REST APIs, 
+          and ship performant, accessible features across modern browsers.
+        </p>
+      </div>
 
       {/* Footer */}
       <footer>
@@ -158,10 +218,18 @@ const Home = () => {
           ref={modalOverlayRef}
           onClick={onModalBackgroundClick}
         >
-          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="join-title" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="join-title"
+            onClick={(e) => e.stopPropagation()}
+          >
             <header className="modal-head">
               <h3 id="join-title">Welcome</h3>
-              <button className="close-x" aria-label="Close" onClick={closeModal}>&times;</button>
+              <button className="close-x" aria-label="Close" onClick={closeModal}>
+                &times;
+              </button>
             </header>
 
             <nav className="tabs" aria-label="Auth tabs">
@@ -184,13 +252,28 @@ const Home = () => {
                 <form id="login-pane" className="tab-pane active" onSubmit={handleLogin}>
                   <div className="form-group">
                     <label htmlFor="login-email">Email</label>
-                    <input id="login-email" ref={loginEmailRef} className="input" type="email" placeholder="you@example.com" required />
+                    <input
+                      id="login-email"
+                      ref={loginEmailRef}
+                      className="input"
+                      type="email"
+                      placeholder="you@example.com"
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label htmlFor="login-password">Password</label>
-                    <input id="login-password" className="input" type="password" placeholder="••••••••" required />
+                    <input
+                      id="login-password"
+                      className="input"
+                      type="password"
+                      placeholder="••••••••"
+                      required
+                    />
                   </div>
-                  <button type="submit" className="btn primary full">Log in</button>
+                  <button type="submit" className="btn primary full">
+                    Log in
+                  </button>
                 </form>
               )}
 
@@ -206,9 +289,17 @@ const Home = () => {
                   </div>
                   <div className="form-group">
                     <label htmlFor="reg-password">Password</label>
-                    <input id="reg-password" className="input" type="password" placeholder="Create a password" required />
+                    <input
+                      id="reg-password"
+                      className="input"
+                      type="password"
+                      placeholder="Create a password"
+                      required
+                    />
                   </div>
-                  <button type="submit" className="btn primary full">Create account</button>
+                  <button type="submit" className="btn primary full">
+                    Create account
+                  </button>
                 </form>
               )}
             </div>

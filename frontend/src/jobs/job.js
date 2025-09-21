@@ -39,14 +39,26 @@ const JobsPage = () => {
         </div>
       </header>
 
-      <div id="jobsDetails" class="extra-space obj-width">
-        <div class="job-header">
-          <div class="job-img-row">
-            <img src="../images/google.png" alt={job.title} />
-          </div>
-        </div>
+      {/* Jobs Section */}
+      <section className="jobs sec-space obj-width">
+        <h2>Jobs in Demand</h2>
+        <p>Most viewed and all time top selling services</p>
 
-      </div>
+        <form>
+          <i className="bx bx-search-alt-2"></i>
+          <input
+            type="text"
+            placeholder="Search Jobs"
+            id="searchBar"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </form>
+
+        <div className="jobs-container" id="root">
+          {/* You can render jobs dynamically here later */}
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="footer">
